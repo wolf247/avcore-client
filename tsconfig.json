@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
-    "resolveJsonModule": true,
     "strictNullChecks": true,
     "allowUnreachableCode": false,
-    "baseUrl": "./",
-    "rootDir": ".",
     "sourceMap": true,
     "moduleResolution": "node",
     "noUnusedLocals": true,
+    "esModuleInterop": true,
     "lib": [
       "es2017", "dom"
-    ]
-  }
+    ],
+    "outDir": "./dist",
+    "declaration": true,
+    "target": "ES2015"
+  },
+  "include":[
+    "./src/index.ts"
+  ]
 }

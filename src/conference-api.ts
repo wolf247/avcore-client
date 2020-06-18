@@ -1,4 +1,4 @@
-import {API_OPERATION, ERROR} from '../../config/constants';
+import {API_OPERATION, ERROR} from './constants';
 import {EventEmitter} from "events";
 import {MediasoupSocketApi} from './mediasoup-socket-api';
 import {MediaKind, RtpCapabilities} from 'mediasoup-client/lib/RtpParameters';

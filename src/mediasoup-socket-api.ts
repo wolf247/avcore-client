@@ -1,4 +1,4 @@
-import {ACTION, ERROR, PATH} from '../../config/constants';
+import {ACTION, ERROR} from './constants';
 import {
     ConnectTransportRequest,
     ConsumerData,
@@ -30,26 +30,41 @@ import {
     PullStreamInputsResponse,
     RecordingRequest,
     StreamKindsData,
-    KindsByFileInput,
-    KindsData,
-    PushStreamOptionsRequest,
-    PushStreamOptionsResponse,
-    PushStreamRequest,
-    StreamRtmpRequest
+    StreamRtmpRequest,
+    KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
-import {IMediasoupApi} from '../../ms/i-mediasoup-api';
-import {default as axios} from 'axios';
+import {IMediasoupApi} from './i-mediasoup-api';
+import { RxSocketClient } from 'rx-socket-io.client';
+import { map } from 'rxjs/operators';
 
-export class MediasoupRestApi implements IMediasoupApi{
-    private readonly url:string;
-    private readonly token:string;
+export class MediasoupSocketApi implements IMediasoupApi{
+    // private readonly url:string;
+    // private readonly token:string;
     private readonly log:typeof console.log;
     private readonly timeouts:Array<ReturnType<typeof setTimeout>> =[];
+    private readonly socketClient: RxSocketClient;
     constructor(url:string,token:string,log?:typeof console.log ){
-        this.url=url;
-        this.token=token;
+        // this.url=url;
+        // this.token=token;
         this.log=log||console.log;
+
+        this.socketClient = new RxSocketClient(
+          url,
+          {
+            query: `auth_token=${token}`,
+            transports: ['websocket'],
+            forceNew: true,
+            path: ''
+          }
+        );
+    }
+    initSocket(): Promise<void> {
+      return this.socketClient.init()
+        .pipe(map(() => {
+            return undefined
+        }))
+        .toPromise();
     }
     async resumeConsumer(json:ConsumerData):Promise<void>{
         await this.request(ACTION.RESUME_CONSUMER, json);
@@ -129,9 +144,6 @@ export class MediasoupRestApi implements IMediasoupApi{
     async fileStreaming(json:StreamFileRequest):Promise<void>{
         await this.request(ACTION.FILE_STREAMING,json);
     }
-    async rtmpStreaming(json:StreamRtmpRequest):Promise<void>{
-        await this.request(ACTION.RTMP_STREAMING,json);
-    }
     async stopFileStreaming(json:StreamKindsData):Promise<void>{
         await this.request(ACTION.STOP_FILE_STREAMING,json);
     }
@@ -166,6 +178,9 @@ export class MediasoupRestApi implements IMediasoupApi{
     async requestKeyframe(json:ConsumerData):Promise<void>{
         await this.request(ACTION.REQUEST_KEYFRAME, json);
     }
+    async rtmpStreaming(json:StreamRtmpRequest):Promise<void>{
+        await this.request(ACTION.RTMP_STREAMING,json);
+    }
     clear():void{
         while (this.timeouts.length) {
             const t=this.timeouts.shift();
@@ -177,9 +192,12 @@ export class MediasoupRestApi implements IMediasoupApi{
     private async request(action,json={}):Promise<object>{
         this.log('sent message', action, JSON.stringify(json));
         try {
-            const {data} =  await axios.post(`${this.url}/${PATH.MEDIASOUP}/${action}`,json,{
-                headers: { 'Content-Type': 'application/json', "Authorization":`Bearer ${this.token}` },
-            });
+            // const {data} =  await axios.post(`${this.url}/${PATH.MEDIASOUP}/${action}`,json,{
+            //     headers: { 'Content-Type': 'application/json', "Authorization":`Bearer ${this.token}` },
+            // });
+            //
+            const data = await this.socketClient.emit<object>(action, json).toPromise();
+            //
             this.log('got message',  action, JSON.stringify(data));
             return data;
         }

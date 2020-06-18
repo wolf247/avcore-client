@@ -1,5 +1,5 @@
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
-import {ACTION} from '../config/constants';
+import {ACTION} from './constants';
 import {
     ConnectTransportRequest,
     ConsumerData,
@@ -33,8 +33,11 @@ import {
     StreamKindsData,
     KindsByFileInput,
     KindsData,
-    PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, StreamRtmpRequest
-} from '../front/src/client-interfaces';
+    PushStreamOptionsResponse,
+    PushStreamOptionsRequest,
+    PushStreamRequest,
+    StreamRtmpRequest
+} from './client-interfaces';
 
 export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void>>{
     [ACTION.RESUME_CONSUMER](json:ConsumerData):Promise<void>
