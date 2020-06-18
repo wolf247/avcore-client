@@ -22,7 +22,6 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "build": "webpack --env.development",
-    "postinstall": "npm run build"
+    "build": "webpack --env.development"
   }
 }
