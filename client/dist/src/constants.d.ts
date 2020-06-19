@@ -38,6 +38,9 @@ export declare enum ACTION {
     KINDS_BY_FILE = "kindsByFile",
     REQUEST_KEYFRAME = "requestKeyframe"
 }
+export declare enum EVENT {
+    STREAM_STARTED = "streamStarted"
+}
 export declare enum ERROR {
     UNKNOWN = 500,
     UNAUTHORIZED = 401,

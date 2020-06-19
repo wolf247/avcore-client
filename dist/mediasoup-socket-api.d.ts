@@ -1,10 +1,11 @@
 import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PushStreamInputsRequest, PushStreamInputsResponse, PullStreamInputsRequest, PullStreamInputsResponse, RecordingRequest, StreamKindsData, StreamRtmpRequest, KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest } from './client-interfaces';
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { IMediasoupApi } from './i-mediasoup-api';
+import { RxSocketClient } from 'rx-socket-io.client';
 export declare class MediasoupSocketApi implements IMediasoupApi {
     private readonly log;
     private readonly timeouts;
-    private readonly socketClient;
+    readonly client: RxSocketClient;
     constructor(url: string, token: string, log?: typeof console.log);
     initSocket(): Promise<void>;
     resumeConsumer(json: ConsumerData): Promise<void>;
