@@ -313,6 +313,7 @@ export class ConferenceApi extends EventEmitter{
                 });
             }
         };
+        getStats();
     }
     async close(hard=true){
         if(this.transport){
