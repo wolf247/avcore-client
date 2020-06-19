@@ -9,7 +9,7 @@ module.exports = env => {
     output: {
       filename: 'index.js',
       path: path.resolve(__dirname, 'dist'),
-      library: 'rx_socketio_client',
+      library: 'avcore',
       libraryTarget: 'umd',
       globalObject: 'this',
     },
@@ -29,10 +29,6 @@ module.exports = env => {
     },
     resolve: {
       extensions: [ '.tsx', '.ts', '.js' ],
-      // TODO
-      // alias: {
-      //   'rxjs/operators': 'rxjs',
-      // },
     },
     optimization: env.production ? {
       minimize: true,
