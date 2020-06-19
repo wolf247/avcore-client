@@ -6,16 +6,20 @@ import {Producer, ProducerOptions} from 'mediasoup-client/lib/Producer';
 import {Consumer} from 'mediasoup-client/lib/Consumer';
 import {debug}  from 'debug';
 // TODO
-import {API_OPERATION, ERROR} from './../../src/constants';
-import {MediasoupSocketApi} from './../../src/mediasoup-socket-api';
 import {
+    ACTION,
+    API_OPERATION,
+    ERROR,
+    MediasoupSocketApi,
     ConferenceConfig,
-    ConferenceInput, ConferenceInputOrigin,
-    ConsumeRequest, ConsumeRequestOriginData,
+    ConferenceInput,
+    ConferenceInputOrigin,
+    ConsumeRequest,
+    ConsumeRequestOriginData,
     ConsumerLayers,
     IceSever,
     Simulcast
-} from './../../src/client-interfaces';
+} from 'avcore';
 
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({bitRate:number,kind:MediaKind}) => void): this
@@ -39,19 +43,12 @@ export class ConferenceApi extends EventEmitter{
     private transportTimeout:ReturnType<typeof setTimeout>;
     private iceServers:IceSever[]|undefined;
     private simulcast:Simulcast|undefined;
-    private readonly timeouts:Array<ReturnType<typeof setTimeout>> =[];
     constructor(configs:ConferenceInput){
         super();
         this.configs={
             url:`https://rpc.codeda.com`,
             kinds:['video','audio'],
             maxIncomingBitrate:0,
-            timeout:{
-                stats: 1000,
-                transport: 3000,
-                consumer: 5000
-            },
-            retryConsumerTimeout:1000,
             ...configs
         };
         this.log=debug(`conference-api [${this.configs.stream}]:`);
@@ -100,22 +97,11 @@ export class ConferenceApi extends EventEmitter{
     async updateKinds(kinds:MediaKind[]){
         if(this.operation===API_OPERATION.SUBSCRIBE){
             this.log('updateKinds', kinds);
-
             const oldKinds=this.configs.kinds;
             this.configs.kinds=kinds;
             for (const kind of oldKinds){
                 if(!kinds.includes(kind)){
-                    const connector=this.connectors.get(kind);
-                    if(connector){
-                        if(connector!==true){
-                            connector.close();
-                            connector.emit('close');
-                        }
-                        else {
-                            this.connectors.delete(kind)
-                        }
-
-                    }
+                   this.unsubscribeTrack(kind)
                 }
             }
             const promises:Promise<void>[]=[];
@@ -134,7 +120,7 @@ export class ConferenceApi extends EventEmitter{
         this.operation=operation;
         if(!this.device.loaded){
             await this.api.initSocket();
-            const {routerRtpCapabilities,iceServers,simulcast,timeout} = await this.api.getServerConfigs();
+            const {routerRtpCapabilities,iceServers,simulcast} = await this.api.getServerConfigs();
             if (routerRtpCapabilities.headerExtensions)
             {
                 routerRtpCapabilities.headerExtensions = routerRtpCapabilities.headerExtensions.
@@ -143,7 +129,6 @@ export class ConferenceApi extends EventEmitter{
             await this.device.load({ routerRtpCapabilities });
             this.iceServers=iceServers;
             this.simulcast=simulcast;
-            this.configs.timeout={...this.configs.timeout,...timeout}
         }
         await this.getTransport();
 
@@ -158,53 +143,104 @@ export class ConferenceApi extends EventEmitter{
         await this.init(API_OPERATION.SUBSCRIBE);
         const mediaStream = this.mediaStream || new MediaStream();
         this.mediaStream=mediaStream;
-        this.configs.kinds.map(async kind=>{
-            await this.subscribeTrack(kind);
+        const {stream}=this.configs;
+        (['audio','video'] as MediaKind[]).map(async kind=>{
+            this.api.client.listen(ACTION.LISTEN_STREAM_STARTED)
+                .subscribe(async ({stream,kind})=>{
+                    if(this.configs.kinds.includes(kind)){
+                        await this.subscribeTrack(kind);
+                    }
+                });
+            this.api.client.listen(ACTION.LISTEN_STREAM_STOPPED)
+                .subscribe(async ({stream,kind})=>{
+                    this.unsubscribeTrack(kind);
+                });
+            Promise.all([this.api.listenStreamStarted({stream,kind}),this.api.listenStreamStopped({stream,kind})]);
+
         });
         return mediaStream;
     }
-    private async subscribeTrack(kind:MediaKind):Promise<void> {
-        const api:ConferenceApi=this;
-        this.connectors.set(kind as MediaKind,true);
-        const onClose=async ()=>{
-            if(this.mediaStream) {
-                consumer.track.stop();
-                this.mediaStream.removeTrack(consumer.track);
-                this.emit("removetrack",new MediaStreamTrackEvent("removetrack",{track:consumer.track}));
+    private unsubscribeTrack(kind:MediaKind):void {
+        const connector=this.connectors.get(kind);
+        if(connector){
+            if(connector!==true){
+                connector.close();
+                connector.emit('close');
             }
-            if(this.transport && !this.transport.closed){
-                const _consumer=this.connectors.get(kind);
+            else {
+                this.connectors.delete(kind)
+            }
+
+        }
+    }
+    private async subscribeTrack(kind:MediaKind):Promise<void> {
+        this.connectors.set(kind as MediaKind,true);
+        const {stream}=this.configs;
+        const api:ConferenceApi=this;
+        const  rtpCapabilities:RtpCapabilities  = this.device.rtpCapabilities as RtpCapabilities;
+        try{
+            const consumeData:ConsumeRequest={ rtpCapabilities,stream,kind,transportId:this.transport.id};
+            if(this.configs.origin && this.configs.url!==this.configs.origin.url){
+                consumeData.origin=ConferenceApi.originOptions(this.configs.url,this.configs.token,this.configs.origin)
+            }
+            const data=await this.api.consume(consumeData);
+            const layers=this.layers.get(kind);
+            if(layers){
                 try {
-                    await this.api.closeConsumer({consumerId: consumer.id});
-                }catch (e) {}
-                if(_consumer && _consumer!==true && consumer.id===_consumer.id){
-                    this.connectors.delete(consumer.track.kind as MediaKind);
-                    if(this.mediaStream){
-                        if(this.transport && this.configs.kinds.includes(kind)) {
-                            await this.subscribeTrack(kind);
+                    await this.api.setPreferredLayers({consumerId:data.id,layers})
+                }
+                catch (e) {}
+            }
+            const consumer=await this.transport.consume(data);
+            consumer.on('close', async ()=>{
+                if(this.mediaStream) {
+                    consumer.track.stop();
+                    this.mediaStream.removeTrack(consumer.track);
+                    this.emit("removetrack",new MediaStreamTrackEvent("removetrack",{track:consumer.track}));
+                }
+                if(this.transport && !this.transport.closed){
+                    const _consumer=this.connectors.get(kind);
+                    try {
+                        await this.api.closeConsumer({consumerId: consumer.id});
+                    }catch (e) {}
+                    if(_consumer && _consumer!==true && consumer.id===_consumer.id){
+                        this.connectors.delete(consumer.track.kind as MediaKind);
+                        if(this.mediaStream){
+                            if(this.transport && this.configs.kinds.includes(kind)) {
+                                await this.subscribeTrack(kind);
+                            }
                         }
                     }
                 }
-            }
-        };
-        const consumer:Consumer = await this.consume(this.transport,this.configs.stream,kind);
-        consumer.on('close', onClose);
-        if(this.connectors.get(kind as MediaKind)===true){
-            this.connectors.set(kind as MediaKind,consumer);
-            this.emit('newConsumerId',{id:consumer.id,kind});
+            });
+            if(this.connectors.get(kind as MediaKind)===true){
+                this.connectors.set(kind as MediaKind,consumer);
+                this.emit('newConsumerId',{id:consumer.id,kind});
 
-            this.listenStats(consumer,'inbound-rtp');
-            await api.api.resumeConsumer({consumerId: consumer.id});
-            if(this.mediaStream){
-                this.mediaStream.addTrack(consumer.track);
-                this.emit("addtrack",new MediaStreamTrackEvent("addtrack",{track:consumer.track}));
+                this.listenStats(consumer,'inbound-rtp');
+                await api.api.resumeConsumer({consumerId: consumer.id});
+                if(this.mediaStream){
+                    this.mediaStream.addTrack(consumer.track);
+                    this.emit("addtrack",new MediaStreamTrackEvent("addtrack",{track:consumer.track}));
+                }
+            }
+            else {
+                this.unsubscribeTrack(kind)
             }
         }
-        else {
-            consumer.close();
-            consumer.emit('close');
-        }
+        catch (e) {
+            if(e){
+                if(e.errorId===ERROR.INVALID_STREAM){
+                }
+                else if(e.errorId===ERROR.INVALID_TRANSPORT){
+                    this.restartAll().then(()=>{}).catch(()=>{});
+                }
+                else {
+                    throw e;
+                }
+            }
 
+        }
     }
     private async publishTrack(track:MediaStreamTrack):Promise<void>{
         const kind:MediaKind=track.kind as MediaKind;
@@ -239,51 +275,10 @@ export class ConferenceApi extends EventEmitter{
             this.emit('newProducerId',{id:producer.id,kind});
         }
     }
-    private async consume(transport:Transport,stream:string,_kind:MediaKind):Promise<Consumer>{
-        const  rtpCapabilities:RtpCapabilities  = this.device.rtpCapabilities as RtpCapabilities;
-        try{
-            const consumeData:ConsumeRequest={ rtpCapabilities,stream,kind:_kind,transportId:transport.id};
-            if(this.configs.origin && this.configs.url!==this.configs.origin.url){
-                consumeData.origin=ConferenceApi.originOptions(this.configs.url,this.configs.token,this.configs.origin)
-            }
-            const data=await this.api.consume(consumeData);
-            const layers=this.layers.get(_kind);
-            if(layers){
-                try {
-                    await this.api.setPreferredLayers({consumerId:data.id,layers})
-                }
-                catch (e) {}
-            }
-            return transport.consume(data);
-        }
-        catch (e) {
-            if(e){
-                if(e.errorId===ERROR.INVALID_STREAM){
-                    let timeout;
-                    await new Promise(resolve=>{
-                        timeout=setTimeout(resolve,this.configs.retryConsumerTimeout);
-                        this.timeouts.push(timeout)
-                    });
-                    if(!this.timeouts.includes(timeout)){
-                        throw e;
-                    }
-                    return this.consume(transport,stream,_kind);
-                }
-                else if(e.errorId===ERROR.INVALID_TRANSPORT){
-                    this.restartAll().then(()=>{}).catch(()=>{});
-                }
-
-            }
-            throw e;
-
-        }
-
-    }
-    private listenStats(target:Consumer|Producer,type:"inbound-rtp"|"outbound-rtp"){
+    private listenStats(target:Consumer|Producer,type:"inbound-rtp"|"outbound-rtp"):void{
         let lastBytes=0;
         let lastBytesTime=Date.now();
         const bytesField=type==='inbound-rtp'?'bytesReceived':'bytesSent';
-        let deadTime=0;
         target.on('close',()=>{
             this.emit('bitRate', {bitRate: 0, kind: target.kind});
         });
@@ -291,40 +286,6 @@ export class ConferenceApi extends EventEmitter{
             if (target && !target.closed) {
                 target.getStats().then(async stats => {
                     if (target && !target.closed) {
-                        let alive = false;
-                        let i=0;
-                        const checkTarget=()=>{
-                            if(i===stats['size']){
-                                if (alive) {
-                                    deadTime = 0;
-                                }
-                                else {
-                                    this.emit('bitRate', {bitRate: 0, kind: target.kind});
-                                    if (type === 'inbound-rtp') {
-
-                                        deadTime++;
-                                        if (deadTime > (this.configs.timeout.consumer/this.configs.timeout.stats)) {
-                                            try {
-                                                this.log('restart by no stats');
-                                                if(lastBytes){
-                                                    target.close();
-                                                    target.emit('close');
-                                                }
-                                                else {
-                                                    this.restartAll().then(()=>{}).catch(()=>{});
-                                                }
-
-                                            }
-
-                                            catch (e) {
-                                            }
-                                            return;
-                                        }
-                                    }
-                                }
-                                setTimeout(getStats, this.configs.timeout.stats);
-                            }
-                        };
                         if(stats['size']) {
                             stats.forEach((s) => {
                                 if (s && s.type === type) {
@@ -333,16 +294,12 @@ export class ConferenceApi extends EventEmitter{
                                         this.emit('bitRate',{bitRate,kind:target.kind});
                                         lastBytes = s[bytesField];
                                         lastBytesTime=Date.now();
-                                        alive = true;
                                     }
                                 }
-                                i++;
-                                checkTarget();
-
                             });
                         }
                         else{
-                            checkTarget();
+                            this.emit('bitRate',{bitRate:0,kind:target.kind});
 
                         }
                     }
@@ -372,12 +329,6 @@ export class ConferenceApi extends EventEmitter{
         }
         await this.closeConnectors();
         delete this.operation;
-        while (this.timeouts.length) {
-            const t=this.timeouts.shift();
-            if(t){
-                clearTimeout(t);
-            }
-        }
         this.api.clear();
     }
     private async closeConnectors():Promise<void>{
@@ -459,12 +410,6 @@ export class ConferenceApi extends EventEmitter{
                         break;
                     case 'failed':
                     case 'disconnected':
-                        if(this.transportTimeout){
-                            clearTimeout(this.transportTimeout)
-                        }
-                        this.transportTimeout=setTimeout(async ()=>{
-                            await this.restartAll();
-                        },this.configs.timeout.transport);
                         break;
 
                 }

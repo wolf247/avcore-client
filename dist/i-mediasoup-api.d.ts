@@ -1,6 +1,6 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION, EVENT } from './constants';
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData, KindsByFileInput, KindsData, PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, StreamRtmpRequest } from './client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData, KindsByFileInput, KindsData, PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, StreamRtmpRequest, StreamKindData } from './client-interfaces';
 import { Observable } from 'rxjs/index';
 export interface IMediasoupApiClient {
     listen<T>(event: EVENT): Observable<T>;
@@ -44,4 +44,6 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.PULL_FROM_SERVER_INPUTS](json: PullStreamInputsRequest): Promise<PullStreamInputsResponse>;
     [ACTION.KINDS_BY_FILE](json: KindsByFileInput): Promise<KindsData>;
     [ACTION.REQUEST_KEYFRAME](json: ConsumerData): Promise<void>;
+    [ACTION.LISTEN_STREAM_STARTED](json: StreamKindData): Promise<boolean>;
+    [ACTION.LISTEN_STREAM_STOPPED](json: StreamKindData): Promise<boolean>;
 }

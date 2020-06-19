@@ -36,7 +36,7 @@ import {
     PushStreamOptionsResponse,
     PushStreamOptionsRequest,
     PushStreamRequest,
-    StreamRtmpRequest
+    StreamRtmpRequest, StreamKindData
 } from './client-interfaces';
 import {Observable} from 'rxjs/index';
 export interface IMediasoupApiClient {
@@ -81,5 +81,6 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.PULL_FROM_SERVER_INPUTS](json:PullStreamInputsRequest):Promise<PullStreamInputsResponse>
     [ACTION.KINDS_BY_FILE](json:KindsByFileInput):Promise<KindsData>
     [ACTION.REQUEST_KEYFRAME](json:ConsumerData):Promise<void>
-
+    [ACTION.LISTEN_STREAM_STARTED](json:StreamKindData):Promise<boolean>
+    [ACTION.LISTEN_STREAM_STOPPED](json:StreamKindData):Promise<boolean>
 }

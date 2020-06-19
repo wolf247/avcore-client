@@ -16,10 +16,8 @@ export interface ProducerData {
     producerId:string
 }
 
-export interface ProduceRequest {
+export interface ProduceRequest extends StreamKindData{
     transportId: string
-    stream: string
-    kind: MediaKind
     rtpParameters: RtpParameters,
     paused?:boolean
     keyFrameRequestDelay?: number
@@ -43,22 +41,16 @@ export interface ConsumeRequestOriginData {
     to:string
     origin?:ConsumeRequestOriginData
 }
-export interface ConsumeRequest {
+export interface ConsumeRequest extends StreamKindData{
     origin?:ConsumeRequestOriginData
-    kind: MediaKind
-    stream: string
     rtpCapabilities: RtpCapabilities
     transportId:string
 }
-export interface PipeToRemoteProducerRequest {
+export interface PipeToRemoteProducerRequest extends StreamKindData{
     origin:ConsumeRequestOriginData
-    kind: MediaKind
-    stream: string
     localToken:string
 }
-export interface PipeFromRemoteProducerRequest extends ProducerData{
-    kind: MediaKind
-    stream: string
+export interface PipeFromRemoteProducerRequest extends ProducerData, StreamKindData{
     workerId:number
 }
 export interface PipeTransportData {
@@ -123,7 +115,9 @@ export interface KindsData{
 export interface StreamKindsData extends StreamData{
     kinds?:MediaKind[]
 }
-
+export interface StreamKindData extends StreamData{
+    kind:MediaKind
+}
 export interface StreamData {
     stream:string
 }
@@ -208,12 +202,6 @@ export interface ConferenceConfig extends ConferenceInput{
     url:string
     kinds:MediaKind[]
     maxIncomingBitrate:number
-    retryConsumerTimeout:number
-    timeout:{
-        stats: number
-        transport: number
-        consumer: number
-    }
 }
 export interface ListData {
     list:string[];

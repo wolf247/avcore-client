@@ -31,7 +31,7 @@ import {
     RecordingRequest,
     StreamKindsData,
     StreamRtmpRequest,
-    KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest
+    KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest, StreamKindData
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi} from './i-mediasoup-api';
@@ -178,10 +178,17 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async requestKeyframe(json:ConsumerData):Promise<void>{
         await this.request(ACTION.REQUEST_KEYFRAME, json);
     }
+    async listenStreamStarted(json:StreamKindData):Promise<boolean>{
+        return (await this.request(ACTION.LISTEN_STREAM_STARTED,json) as boolean);
+    }
+    async listenStreamStopped(json:StreamKindData):Promise<boolean>{
+        return (await this.request(ACTION.LISTEN_STREAM_STOPPED,json) as boolean);
+    }
     async rtmpStreaming(json:StreamRtmpRequest):Promise<void>{
         await this.request(ACTION.RTMP_STREAMING,json);
     }
     clear():void{
+        this.client.close();
         while (this.timeouts.length) {
             const t=this.timeouts.shift();
             if(t){
@@ -189,15 +196,10 @@ export class MediasoupSocketApi implements IMediasoupApi{
             }
         }
     }
-    private async request(action,json={}):Promise<object>{
+    private async request(action,json={}):Promise<object|boolean>{
         this.log('sent message', action, JSON.stringify(json));
         try {
-            // const {data} =  await axios.post(`${this.url}/${PATH.MEDIASOUP}/${action}`,json,{
-            //     headers: { 'Content-Type': 'application/json', "Authorization":`Bearer ${this.token}` },
-            // });
-            //
             const data = await this.client.emit<object>(action, json).toPromise();
-            //
             this.log('got message',  action, JSON.stringify(data));
             return data;
         }

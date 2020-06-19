@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { EventEmitter } from "events";
 import { MediaKind } from 'mediasoup-client/lib/RtpParameters';
-import { ConferenceInput, ConsumerLayers } from './../../src/client-interfaces';
+import { ConferenceInput, ConsumerLayers } from 'avcore';
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({ bitRate: number, kind: MediaKind }: {
         bitRate: any;
@@ -37,7 +37,6 @@ export declare class ConferenceApi extends EventEmitter {
     private transportTimeout;
     private iceServers;
     private simulcast;
-    private readonly timeouts;
     constructor(configs: ConferenceInput);
     setPreferredLayers(layers: ConsumerLayers): Promise<void>;
     addTrack(track: MediaStreamTrack): Promise<void>;
@@ -47,9 +46,9 @@ export declare class ConferenceApi extends EventEmitter {
     private init;
     publish(mediaStream: MediaStream): Promise<MediaStream>;
     subscribe(): Promise<MediaStream>;
+    private unsubscribeTrack;
     private subscribeTrack;
     private publishTrack;
-    private consume;
     private listenStats;
     close(hard?: boolean): Promise<void>;
     private closeConnectors;

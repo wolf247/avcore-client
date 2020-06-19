@@ -36,10 +36,13 @@ export declare enum ACTION {
     PUSH_TO_SERVER_OPTIONS = "pushToServerOptions",
     PUSH_TO_SERVER = "pushToServer",
     KINDS_BY_FILE = "kindsByFile",
-    REQUEST_KEYFRAME = "requestKeyframe"
+    REQUEST_KEYFRAME = "requestKeyframe",
+    LISTEN_STREAM_STARTED = "listenStreamStarted",
+    LISTEN_STREAM_STOPPED = "listenStreamStopped"
 }
 export declare enum EVENT {
-    STREAM_STARTED = "streamStarted"
+    STREAM_STARTED = "streamStarted",
+    STREAM_STOPPED = "streamStopped"
 }
 export declare enum ERROR {
     UNKNOWN = 500,
