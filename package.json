@@ -22,7 +22,7 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "build:prod": "webpack --env.production",
-    "build:dev": "webpack --env.development"
+    "build:prod": "webpack --env.production && cd client && npm run build:prod",
+    "build:dev": "webpack --env.development && cd client && npm run build:dev"
   }
 }

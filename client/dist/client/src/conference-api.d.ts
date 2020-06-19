@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { EventEmitter } from "events";
 import { MediaKind } from 'mediasoup-client/lib/RtpParameters';
-import { ConferenceInput, ConsumerLayers } from './client-interfaces';
+import { ConferenceInput, ConsumerLayers } from './../../src/client-interfaces';
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({ bitRate: number, kind: MediaKind }: {
         bitRate: any;

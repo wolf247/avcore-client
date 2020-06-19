@@ -1,12 +1,13 @@
-import {API_OPERATION, ERROR} from './constants';
 import {EventEmitter} from "events";
-import {MediasoupSocketApi} from './mediasoup-socket-api';
 import {MediaKind, RtpCapabilities} from 'mediasoup-client/lib/RtpParameters';
 import {Device} from 'mediasoup-client';
 import {Transport, TransportOptions} from 'mediasoup-client/lib/Transport';
 import {Producer, ProducerOptions} from 'mediasoup-client/lib/Producer';
 import {Consumer} from 'mediasoup-client/lib/Consumer';
 import {debug}  from 'debug';
+// TODO
+import {API_OPERATION, ERROR} from './../../src/constants';
+import {MediasoupSocketApi} from './../../src/mediasoup-socket-api';
 import {
     ConferenceConfig,
     ConferenceInput, ConferenceInputOrigin,
@@ -14,7 +15,7 @@ import {
     ConsumerLayers,
     IceSever,
     Simulcast
-} from './client-interfaces';
+} from './../../src/client-interfaces';
 
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({bitRate:number,kind:MediaKind}) => void): this

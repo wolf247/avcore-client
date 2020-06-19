@@ -1,0 +1,13 @@
+{
+  "name": "avcore.client",
+  "version": "1.0.0",
+  "description": "avcore client",
+  "main": "dist/index.js",
+  "types": "dist/client/src/index.d.ts",
+  "author": "Codeda",
+  "license": "ISC",
+  "scripts": {
+    "build:prod": "webpack --env.production",
+    "build:dev": "webpack --env.development"
+  }
+}
