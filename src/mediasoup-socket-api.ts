@@ -43,13 +43,13 @@ export class MediasoupSocketApi implements IMediasoupApi{
     // private readonly token:string;
     private readonly log:typeof console.log;
     private readonly timeouts:Array<ReturnType<typeof setTimeout>> =[];
-    private readonly socketClient: RxSocketClient;
+    readonly client: RxSocketClient;
     constructor(url:string,token:string,log?:typeof console.log ){
         // this.url=url;
         // this.token=token;
         this.log=log||console.log;
 
-        this.socketClient = new RxSocketClient(
+        this.client = new RxSocketClient(
           url,
           {
             query: `auth_token=${token}`,
@@ -60,7 +60,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
         );
     }
     initSocket(): Promise<void> {
-      return this.socketClient.init()
+      return this.client.init()
         .pipe(map(() => {
             return undefined
         }))
@@ -196,7 +196,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
             //     headers: { 'Content-Type': 'application/json', "Authorization":`Bearer ${this.token}` },
             // });
             //
-            const data = await this.socketClient.emit<object>(action, json).toPromise();
+            const data = await this.client.emit<object>(action, json).toPromise();
             //
             this.log('got message',  action, JSON.stringify(data));
             return data;

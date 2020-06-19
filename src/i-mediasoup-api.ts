@@ -1,5 +1,5 @@
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
-import {ACTION} from './constants';
+import {ACTION, EVENT} from './constants';
 import {
     ConnectTransportRequest,
     ConsumerData,
@@ -38,8 +38,12 @@ import {
     PushStreamRequest,
     StreamRtmpRequest
 } from './client-interfaces';
-
+import {Observable} from 'rxjs/index';
+export interface IMediasoupApiClient {
+    listen<T>(event: EVENT): Observable<T>;
+}
 export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void>>{
+    readonly client:IMediasoupApiClient;
     [ACTION.RESUME_CONSUMER](json:ConsumerData):Promise<void>
     [ACTION.PAUSE_CONSUMER](json:ConsumerData):Promise<void>
     [ACTION.SET_PREFERRED_LAYERS](json:ConsumerPreferredLayers):Promise<void>
