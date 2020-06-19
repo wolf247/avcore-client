@@ -7,9 +7,9 @@ import {Consumer} from 'mediasoup-client/lib/Consumer';
 import {debug}  from 'debug';
 // TODO
 import {
-    ACTION,
     API_OPERATION,
     ERROR,
+    EVENT,
     MediasoupSocketApi,
     ConferenceConfig,
     ConferenceInput,
@@ -49,6 +49,11 @@ export class ConferenceApi extends EventEmitter{
             url:`https://rpc.codeda.com`,
             kinds:['video','audio'],
             maxIncomingBitrate:0,
+            timeout:{
+                stats: 1000,
+                transport: 3000,
+                consumer: 5000
+            },
             ...configs
         };
         this.log=debug(`conference-api [${this.configs.stream}]:`);
@@ -120,7 +125,7 @@ export class ConferenceApi extends EventEmitter{
         this.operation=operation;
         if(!this.device.loaded){
             await this.api.initSocket();
-            const {routerRtpCapabilities,iceServers,simulcast} = await this.api.getServerConfigs();
+            const {routerRtpCapabilities,iceServers,simulcast,timeout} = await this.api.getServerConfigs();
             if (routerRtpCapabilities.headerExtensions)
             {
                 routerRtpCapabilities.headerExtensions = routerRtpCapabilities.headerExtensions.
@@ -129,6 +134,7 @@ export class ConferenceApi extends EventEmitter{
             await this.device.load({ routerRtpCapabilities });
             this.iceServers=iceServers;
             this.simulcast=simulcast;
+            this.configs.timeout={...this.configs.timeout,...timeout}
         }
         await this.getTransport();
 
@@ -145,13 +151,13 @@ export class ConferenceApi extends EventEmitter{
         this.mediaStream=mediaStream;
         const {stream}=this.configs;
         (['audio','video'] as MediaKind[]).map(async kind=>{
-            this.api.client.listen(ACTION.LISTEN_STREAM_STARTED)
+            this.api.client.listen(EVENT.STREAM_STARTED)
                 .subscribe(async ({stream,kind})=>{
                     if(this.configs.kinds.includes(kind)){
                         await this.subscribeTrack(kind);
                     }
                 });
-            this.api.client.listen(ACTION.LISTEN_STREAM_STOPPED)
+            this.api.client.listen(EVENT.STREAM_STOPPED)
                 .subscribe(async ({stream,kind})=>{
                     this.unsubscribeTrack(kind);
                 });
@@ -249,7 +255,7 @@ export class ConferenceApi extends EventEmitter{
                 await this.removeTrack(track);
             });
 
-            const params:ProducerOptions = { track, stopTracks:!!this.configs.stopTracks };
+            const params:ProducerOptions = { track, stopTracks:this.configs.stopTracks };
             if (this.configs.simulcast && kind==='video' && this.simulcast) {
                 if(this.simulcast.encodings){
                     params.encodings = this.simulcast.encodings;
@@ -300,14 +306,13 @@ export class ConferenceApi extends EventEmitter{
                         }
                         else{
                             this.emit('bitRate',{bitRate:0,kind:target.kind});
-
                         }
+                        setTimeout(getStats, this.configs.timeout.stats);
                     }
 
                 });
             }
         };
-        getStats();
     }
     async close(hard=true){
         if(this.transport){

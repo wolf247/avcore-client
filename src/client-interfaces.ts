@@ -196,12 +196,17 @@ export interface ConferenceInput {
     simulcast?:boolean
     kinds?:MediaKind[]
     maxIncomingBitrate?:number
-    retryConsumerTimeout?:number
+}
+export interface ConferenceConfigTimeout {
+    stats: number
+    transport: number
+    consumer: number
 }
 export interface ConferenceConfig extends ConferenceInput{
     url:string
     kinds:MediaKind[]
     maxIncomingBitrate:number
+    timeout: ConferenceConfigTimeout
 }
 export interface ListData {
     list:string[];
