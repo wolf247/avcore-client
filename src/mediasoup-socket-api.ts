@@ -44,7 +44,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
     private readonly log:typeof console.log;
     private readonly timeouts:Array<ReturnType<typeof setTimeout>> =[];
     readonly client: RxSocketClient;
-    constructor(url:string,token:string,log?:typeof console.log ){
+    constructor(url:string,worker:number,token:string,log?:typeof console.log ){
         // this.url=url;
         // this.token=token;
         this.log=log||console.log;
@@ -52,7 +52,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
         this.client = new RxSocketClient(
             url,
             {
-                query: `auth_token=${token}`,
+                query: `auth_token=${token}&mediasoup_worker=${worker}`,
                 transports: ['websocket'],
                 forceNew: true,
                 path: ''

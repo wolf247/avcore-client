@@ -32,10 +32,12 @@ export interface ConsumeResponse {
     type: string;
     producerPaused: boolean;
 }
-export interface ConsumeRequestOriginData {
+export interface ConsumeRequestOriginDataServer extends ConferenceInputOrigin {
     token: string;
-    from: string;
-    to: string;
+}
+export interface ConsumeRequestOriginData {
+    source: ConsumeRequestOriginDataServer;
+    target: ConsumeRequestOriginDataServer;
 }
 export interface ConsumeRequest extends StreamKindData {
     origin?: ConsumeRequestOriginData;
@@ -181,12 +183,14 @@ export interface PullStreamInputsResponse {
     };
 }
 export interface ConferenceInputOrigin {
-    url: string;
     token?: string;
+    url: string;
+    worker: number;
 }
 export interface ConferenceInput {
     stopTracks?: boolean;
-    url?: string;
+    worker?: number;
+    url: string;
     origin?: ConferenceInputOrigin;
     stream: string;
     token: string;
@@ -200,7 +204,7 @@ export interface ConferenceConfigTimeout {
     consumer: number;
 }
 export interface ConferenceConfig extends ConferenceInput {
-    url: string;
+    worker: number;
     kinds: MediaKind[];
     maxIncomingBitrate: number;
     timeout: ConferenceConfigTimeout;

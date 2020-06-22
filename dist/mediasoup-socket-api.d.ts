@@ -6,7 +6,7 @@ export declare class MediasoupSocketApi implements IMediasoupApi {
     private readonly log;
     private readonly timeouts;
     readonly client: RxSocketClient;
-    constructor(url: string, token: string, log?: typeof console.log);
+    constructor(url: string, worker: number, token: string, log?: typeof console.log);
     initSocket(): Promise<void>;
     resumeConsumer(json: ConsumerData): Promise<void>;
     pauseConsumer(json: ConsumerData): Promise<void>;

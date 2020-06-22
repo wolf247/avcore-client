@@ -54,5 +54,4 @@ export declare class ConferenceApi extends EventEmitter {
     private closeConnectors;
     private restartAll;
     private getTransport;
-    private static originOptions;
 }

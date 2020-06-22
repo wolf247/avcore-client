@@ -13,9 +13,7 @@ import {
     MediasoupSocketApi,
     ConferenceConfig,
     ConferenceInput,
-    ConferenceInputOrigin,
     ConsumeRequest,
-    ConsumeRequestOriginData,
     ConsumerLayers,
     IceSever,
     Simulcast
@@ -46,7 +44,7 @@ export class ConferenceApi extends EventEmitter{
     constructor(configs:ConferenceInput){
         super();
         this.configs={
-            url:`https://rpc.codeda.com`,
+            worker:0,
             kinds:['video','audio'],
             maxIncomingBitrate:0,
             timeout:{
@@ -57,7 +55,7 @@ export class ConferenceApi extends EventEmitter{
             ...configs
         };
         this.log=debug(`conference-api [${this.configs.stream}]:`);
-        this.api=new MediasoupSocketApi(this.configs.url,this.configs.token,this.log);
+        this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
         this.device = new Device();
     }
     async setPreferredLayers(layers:ConsumerLayers):Promise<void>{
@@ -194,7 +192,15 @@ export class ConferenceApi extends EventEmitter{
         try{
             const consumeData:ConsumeRequest={ rtpCapabilities,stream,kind,transportId:this.transport.id};
             if(this.configs.origin && this.configs.url!==this.configs.origin.url){
-                consumeData.origin=ConferenceApi.originOptions(this.configs.url,this.configs.token,this.configs.origin)
+                const {token,worker,url}=this.configs;
+                consumeData.origin={
+                    target: {url, worker, token},
+                    source: {
+                        url:this.configs.origin.url,
+                        worker:this.configs.origin.worker,
+                        token:this.configs.origin.token||token,
+                    }
+                }
             }
             const data=await this.api.consume(consumeData);
             const layers=this.layers.get(kind);
@@ -430,15 +436,5 @@ export class ConferenceApi extends EventEmitter{
             });
         }
         return this.transport;
-    }
-    private static originOptions(url,token,origin:ConferenceInputOrigin):ConsumeRequestOriginData{
-        if(origin.token){
-            token=origin.token;
-        }
-        return {
-            token,
-            to: url,
-            from:origin.url
-        };
     }
 }
