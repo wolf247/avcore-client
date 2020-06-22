@@ -49,7 +49,6 @@ export interface ConsumeRequest extends StreamKindData{
 }
 export interface PipeToRemoteProducerRequest extends StreamKindData{
     origin:ConsumeRequestOriginData
-    localToken:string
     sameHost:boolean
 }
 export interface PipeFromRemoteProducerRequest extends ProducerData, StreamKindData{
