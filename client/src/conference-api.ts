@@ -185,7 +185,7 @@ export class ConferenceApi extends EventEmitter{
         }
     }
     private async subscribeTrack(kind:MediaKind):Promise<void> {
-        const d=Date.now();
+        const d=Math.random();
         console.log('new connector',d);
         this.connectors.set(kind as MediaKind,d);
         const {stream}=this.configs;
