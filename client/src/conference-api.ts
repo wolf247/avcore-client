@@ -153,12 +153,15 @@ export class ConferenceApi extends EventEmitter{
         (['audio','video'] as MediaKind[]).map(async kind=>{
             this.api.client.listen(EVENT.STREAM_STARTED)
                 .subscribe(async ({stream,kind})=>{
+                    this.unsubscribeTrack(kind);
+                    this.log('on stream started',kind);
                     if(this.configs.kinds.includes(kind)){
                         await this.subscribeTrack(kind);
                     }
                 });
             this.api.client.listen(EVENT.STREAM_STOPPED)
                 .subscribe(async ({stream,kind})=>{
+                    this.log('on stream stopped',kind);
                     this.unsubscribeTrack(kind);
                 });
             Promise.all([this.api.listenStreamStarted({stream,kind}),this.api.listenStreamStopped({stream,kind})]);
