@@ -1,4 +1,4 @@
-import {ACTION, ERROR} from './constants';
+import {ACTION} from './constants';
 import {
     ConnectTransportRequest,
     ConsumerData,
@@ -50,21 +50,21 @@ export class MediasoupSocketApi implements IMediasoupApi{
         this.log=log||console.log;
 
         this.client = new RxSocketClient(
-          url,
-          {
-            query: `auth_token=${token}`,
-            transports: ['websocket'],
-            forceNew: true,
-            path: ''
-          }
+            url,
+            {
+                query: `auth_token=${token}`,
+                transports: ['websocket'],
+                forceNew: true,
+                path: ''
+            }
         );
     }
     initSocket(): Promise<void> {
-      return this.client.init()
-        .pipe(map(() => {
-            return undefined
-        }))
-        .toPromise();
+        return this.client.init()
+            .pipe(map(() => {
+                return undefined
+            }))
+            .toPromise();
     }
     async resumeConsumer(json:ConsumerData):Promise<void>{
         await this.request(ACTION.RESUME_CONSUMER, json);
@@ -198,28 +198,14 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     private async request(action,json={}):Promise<object|boolean>{
         this.log('sent message', action, JSON.stringify(json));
-        try {
-            const data = await this.client.emit<object>(action, json).toPromise();
+        const data = await this.client.emit<object>(action, json).toPromise();
+        if(data.hasOwnProperty('errorId')){
+            throw data;
+        }
+        else {
             this.log('got message',  action, JSON.stringify(data));
-            return data;
         }
-        catch (e) {
-            this.log('got error',e);
-            if(e.response && !e.response.status && !ERROR[e.response.status]){
-                let timeout;
-                await new Promise(resolve=>{
-                    timeout=setTimeout(resolve,1000);
-                    this.timeouts.push(timeout)
-                });
-                if(!this.timeouts.includes(timeout)){
-                    throw e;
-                }
-                return await this.request(action,json);
-            }
-            else {
-                throw {errorId: e.response.status};
-            }
-        }
+        return data;
 
     }
 }

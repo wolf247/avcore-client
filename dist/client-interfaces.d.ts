@@ -182,7 +182,6 @@ export interface PullStreamInputsResponse {
 }
 export interface ConferenceInputOrigin {
     url: string;
-    origin?: ConferenceInputOrigin;
     token?: string;
 }
 export interface ConferenceInput {

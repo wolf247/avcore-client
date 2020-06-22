@@ -60,7 +60,7 @@ export class ConferenceApi extends EventEmitter{
         this.api=new MediasoupSocketApi(this.configs.url,this.configs.token,this.log);
         this.device = new Device();
     }
-    async setPreferredLayers(layers:ConsumerLayers){
+    async setPreferredLayers(layers:ConsumerLayers):Promise<void>{
         if(this.operation===API_OPERATION.SUBSCRIBE){
             const kind:MediaKind='video';
             this.layers.set(kind,layers);
@@ -73,7 +73,7 @@ export class ConferenceApi extends EventEmitter{
             }
         }
     }
-    async addTrack(track:MediaStreamTrack){
+    async addTrack(track:MediaStreamTrack):Promise<void>{
         this.log('addTrack',track);
         if(this.operation===API_OPERATION.PUBLISH && this.mediaStream){
             this.mediaStream.addTrack(track);
@@ -81,7 +81,7 @@ export class ConferenceApi extends EventEmitter{
             await this.publishTrack(track);
         }
     }
-    async removeTrack(track:MediaStreamTrack){
+    async removeTrack(track:MediaStreamTrack):Promise<void>{
         this.log('removeTrack',track);
         if(this.operation===API_OPERATION.PUBLISH && this.mediaStream){
             this.mediaStream.removeTrack(track);
@@ -93,13 +93,13 @@ export class ConferenceApi extends EventEmitter{
             }
         }
     }
-    async setMaxPublisherBitrate(bitrate:number){
+    async setMaxPublisherBitrate(bitrate:number):Promise<void>{
         this.configs.maxIncomingBitrate=bitrate;
         if(this.transport){
             await this.api.setMaxIncomingBitrate({transportId:this.transport.id,bitrate})
         }
     }
-    async updateKinds(kinds:MediaKind[]){
+    async updateKinds(kinds:MediaKind[]):Promise<void>{
         if(this.operation===API_OPERATION.SUBSCRIBE){
             this.log('updateKinds', kinds);
             const oldKinds=this.configs.kinds;
@@ -435,14 +435,10 @@ export class ConferenceApi extends EventEmitter{
         if(origin.token){
             token=origin.token;
         }
-        const data:ConsumeRequestOriginData={
+        return {
             token,
             to: url,
             from:origin.url
         };
-        if(origin.origin && origin.origin.url!==origin.url){
-            data.origin=ConferenceApi.originOptions(origin.url,token,origin.origin)
-        }
-        return data;
     }
 }
