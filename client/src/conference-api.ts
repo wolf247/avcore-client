@@ -146,11 +146,13 @@ export class ConferenceApi extends EventEmitter{
         return mediaStream;
     }
     async subscribe():Promise<MediaStream>{
+        console.log('subscribe');
         await this.init(API_OPERATION.SUBSCRIBE);
         const mediaStream = this.mediaStream || new MediaStream();
         this.mediaStream=mediaStream;
         const {stream}=this.configs;
-        (['audio','video'] as MediaKind[]).map(async kind=>{
+        const promises:Promise<boolean>[]=[];
+        for (const kind of ['audio','video'] as MediaKind[]){
             this.api.client.listen(EVENT.STREAM_STARTED)
                 .subscribe(async ({stream,kind})=>{
                     this.unsubscribeTrack(kind);
@@ -164,9 +166,9 @@ export class ConferenceApi extends EventEmitter{
                     console.log('on stream stopped',kind);
                     this.unsubscribeTrack(kind);
                 });
-            Promise.all([this.api.listenStreamStarted({stream,kind}),this.api.listenStreamStopped({stream,kind})]);
-
-        });
+            promises.push(this.api.listenStreamStarted({stream,kind}),this.api.listenStreamStopped({stream,kind}));
+        }
+        await Promise.all(promises);
         return mediaStream;
     }
     private unsubscribeTrack(kind:MediaKind):void {
@@ -184,6 +186,7 @@ export class ConferenceApi extends EventEmitter{
     }
     private async subscribeTrack(kind:MediaKind):Promise<void> {
         const d=Date.now();
+        console.log('new connector',d);
         this.connectors.set(kind as MediaKind,d);
         const {stream}=this.configs;
         const api:ConferenceApi=this;
@@ -235,6 +238,7 @@ export class ConferenceApi extends EventEmitter{
                 }
             }
             else {
+                console.log('wrong connector',this.connectors.get(kind as MediaKind));
                 this.unsubscribeTrack(kind)
             }
         }
