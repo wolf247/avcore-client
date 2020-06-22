@@ -34,7 +34,7 @@ export class ConferenceApi extends EventEmitter{
     private readonly api:MediasoupSocketApi;
     private readonly configs:ConferenceConfig;
     private readonly device:Device;
-    private readonly connectors:Map<MediaKind,Consumer|Producer|true> = new Map();
+    private readonly connectors:Map<MediaKind,Consumer|Producer|number> = new Map();
     private readonly layers:Map<MediaKind,ConsumerLayers> = new Map();
     private readonly log:typeof console.log;
     private operation:API_OPERATION;
@@ -65,7 +65,7 @@ export class ConferenceApi extends EventEmitter{
             const kind:MediaKind='video';
             this.layers.set(kind,layers);
             const consumer=this.connectors.get(kind);
-            if(consumer && consumer!==true){
+            if(consumer && typeof consumer!=='number'){
                 try {
                     await this.api.setPreferredLayers({consumerId: consumer.id, layers})
                 }
@@ -87,7 +87,7 @@ export class ConferenceApi extends EventEmitter{
             this.mediaStream.removeTrack(track);
             this.emit("removetrack",new MediaStreamTrackEvent("removetrack",{track}));
             const producer=this.connectors.get(track.kind as MediaKind);
-            if(producer && producer!==true){
+            if(producer && typeof producer!=='number'){
                 producer.close();
                 producer.emit('close');
             }
@@ -154,14 +154,14 @@ export class ConferenceApi extends EventEmitter{
             this.api.client.listen(EVENT.STREAM_STARTED)
                 .subscribe(async ({stream,kind})=>{
                     this.unsubscribeTrack(kind);
-                    this.log('on stream started',kind);
+                    console.log('on stream started',kind);
                     if(this.configs.kinds.includes(kind)){
                         await this.subscribeTrack(kind);
                     }
                 });
             this.api.client.listen(EVENT.STREAM_STOPPED)
                 .subscribe(async ({stream,kind})=>{
-                    this.log('on stream stopped',kind);
+                    console.log('on stream stopped',kind);
                     this.unsubscribeTrack(kind);
                 });
             Promise.all([this.api.listenStreamStarted({stream,kind}),this.api.listenStreamStopped({stream,kind})]);
@@ -172,7 +172,7 @@ export class ConferenceApi extends EventEmitter{
     private unsubscribeTrack(kind:MediaKind):void {
         const connector=this.connectors.get(kind);
         if(connector){
-            if(connector!==true){
+            if(typeof connector!=='number'){
                 connector.close();
                 connector.emit('close');
             }
@@ -183,7 +183,8 @@ export class ConferenceApi extends EventEmitter{
         }
     }
     private async subscribeTrack(kind:MediaKind):Promise<void> {
-        this.connectors.set(kind as MediaKind,true);
+        const d=Date.now();
+        this.connectors.set(kind as MediaKind,d);
         const {stream}=this.configs;
         const api:ConferenceApi=this;
         const  rtpCapabilities:RtpCapabilities  = this.device.rtpCapabilities as RtpCapabilities;
@@ -212,7 +213,7 @@ export class ConferenceApi extends EventEmitter{
                     try {
                         await this.api.closeConsumer({consumerId: consumer.id});
                     }catch (e) {}
-                    if(_consumer && _consumer!==true && consumer.id===_consumer.id){
+                    if(_consumer && typeof _consumer!=='number' && consumer.id===_consumer.id){
                         this.connectors.delete(consumer.track.kind as MediaKind);
                         if(this.mediaStream){
                             if(this.transport && this.configs.kinds.includes(kind)) {
@@ -222,7 +223,7 @@ export class ConferenceApi extends EventEmitter{
                     }
                 }
             });
-            if(this.connectors.get(kind as MediaKind)===true){
+            if(this.connectors.get(kind as MediaKind)===d){
                 this.connectors.set(kind as MediaKind,consumer);
                 this.emit('newConsumerId',{id:consumer.id,kind});
 
@@ -270,7 +271,7 @@ export class ConferenceApi extends EventEmitter{
             const producer=await this.transport.produce(params);
             producer.on('close', async ()=>{
                 const producer=this.connectors.get(kind);
-                if(producer && producer!==true){
+                if(producer && typeof producer!=='number'){
                     this.connectors.delete(kind);
                     try {
                         await this.api.closeProducer({producerId:producer.id});
@@ -346,7 +347,7 @@ export class ConferenceApi extends EventEmitter{
                 this.connectors.forEach((connector,kind)=>{
                     this.connectors.delete(kind);
                     try {
-                        if(connector && connector!==true){
+                        if(connector && typeof connector!=='number'){
                             connector.close();
                             connector.emit('close');
                         }
