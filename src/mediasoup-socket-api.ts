@@ -200,6 +200,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
         this.log('sent message', action, JSON.stringify(json));
         const data = await this.client.emit<object>(action, json).toPromise();
         if(data && data.hasOwnProperty('errorId')){
+            this.log('got error',  action, JSON.stringify(data));
             throw data;
         }
         else {
