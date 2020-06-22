@@ -199,7 +199,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
     private async request(action,json={}):Promise<object|boolean>{
         this.log('sent message', action, JSON.stringify(json));
         const data = await this.client.emit<object>(action, json).toPromise();
-        if(data.hasOwnProperty('errorId')){
+        if(data && data.hasOwnProperty('errorId')){
             throw data;
         }
         else {
