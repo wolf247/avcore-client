@@ -39,7 +39,6 @@ export interface ConsumeRequestOriginData {
     token:string
     from:string
     to:string
-    origin?:ConsumeRequestOriginData
 }
 export interface ConsumeRequest extends StreamKindData{
     origin?:ConsumeRequestOriginData
