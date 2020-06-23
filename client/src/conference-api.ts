@@ -5,7 +5,6 @@ import {Transport, TransportOptions} from 'mediasoup-client/lib/Transport';
 import {Producer, ProducerOptions} from 'mediasoup-client/lib/Producer';
 import {Consumer} from 'mediasoup-client/lib/Consumer';
 import {debug}  from 'debug';
-// TODO
 import {
     API_OPERATION,
     ERROR,
@@ -18,6 +17,7 @@ import {
     IceSever,
     Simulcast
 } from 'avcore';
+import {Subscription} from 'rxjs/internal/Subscription';
 
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({bitRate:number,kind:MediaKind}) => void): this
@@ -41,6 +41,7 @@ export class ConferenceApi extends EventEmitter{
     private transportTimeout:ReturnType<typeof setTimeout>;
     private iceServers:IceSever[]|undefined;
     private simulcast:Simulcast|undefined;
+    private disconnectSubscription:Subscription|undefined;
     constructor(configs:ConferenceInput){
         super();
         this.configs={
@@ -123,6 +124,11 @@ export class ConferenceApi extends EventEmitter{
         this.operation=operation;
         if(!this.device.loaded){
             await this.api.initSocket();
+            this.disconnectSubscription=this.api.client.listen('disconnect').subscribe(async ()=>{
+                console.log('restarting by disconnect');
+                await this.api.initSocket();
+                await this.restartAll();
+            });
             const {routerRtpCapabilities,iceServers,simulcast,timeout} = await this.api.getServerConfigs();
             if (routerRtpCapabilities.headerExtensions)
             {
@@ -331,7 +337,7 @@ export class ConferenceApi extends EventEmitter{
     }
     async close(hard=true){
         if(this.transport){
-            if(!this.transport.closed && hard){
+            if(!this.transport.closed){
                 this.transport.close();
             }
             const transportId=this.transport.id;
@@ -342,13 +348,16 @@ export class ConferenceApi extends EventEmitter{
             catch (e) {}
             this.emit('connectionstatechange',{state:'disconnected'});
         }
-        if(hard && this.mediaStream && this.configs.stopTracks){
+        if((hard || this.operation===API_OPERATION.SUBSCRIBE) && this.mediaStream && this.configs.stopTracks){
             this.mediaStream.getTracks().forEach(function(track) {
                 track.stop();
             });
         }
         await this.closeConnectors();
         delete this.operation;
+        if(hard && this.disconnectSubscription){
+            this.disconnectSubscription.unsubscribe();
+        }
         this.api.clear();
     }
     private async closeConnectors():Promise<void>{

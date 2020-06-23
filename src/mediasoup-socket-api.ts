@@ -42,7 +42,6 @@ export class MediasoupSocketApi implements IMediasoupApi{
     // private readonly url:string;
     // private readonly token:string;
     private readonly log:typeof console.log;
-    private readonly timeouts:Array<ReturnType<typeof setTimeout>> =[];
     readonly client: RxSocketClient;
     constructor(url:string,worker:number,token:string,log?:typeof console.log ){
         // this.url=url;
@@ -189,12 +188,6 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     clear():void{
         this.client.close();
-        while (this.timeouts.length) {
-            const t=this.timeouts.shift();
-            if(t){
-                clearTimeout(t);
-            }
-        }
     }
     private async request(action,json={}):Promise<object|boolean>{
         this.log('sent message', action, JSON.stringify(json));
