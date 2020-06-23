@@ -17,7 +17,7 @@ import {
     IceSever,
     Simulcast
 } from 'avcore';
-import {Subscription} from 'rxjs/internal/Subscription';
+import {SubscriptionLike} from 'rxjs/internal/types';
 
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({bitRate:number,kind:MediaKind}) => void): this
@@ -41,7 +41,7 @@ export class ConferenceApi extends EventEmitter{
     private transportTimeout:ReturnType<typeof setTimeout>;
     private iceServers:IceSever[]|undefined;
     private simulcast:Simulcast|undefined;
-    private disconnectSubscription:Subscription|undefined;
+    private disconnectSubscription:SubscriptionLike|undefined;
     constructor(configs:ConferenceInput){
         super();
         this.configs={

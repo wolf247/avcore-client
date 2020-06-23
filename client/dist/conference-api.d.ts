@@ -37,6 +37,7 @@ export declare class ConferenceApi extends EventEmitter {
     private transportTimeout;
     private iceServers;
     private simulcast;
+    private disconnectSubscription;
     constructor(configs: ConferenceInput);
     setPreferredLayers(layers: ConsumerLayers): Promise<void>;
     addTrack(track: MediaStreamTrack): Promise<void>;

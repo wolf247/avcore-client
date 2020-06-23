@@ -4,7 +4,6 @@ import { IMediasoupApi } from './i-mediasoup-api';
 import { RxSocketClient } from 'rx-socket-io.client';
 export declare class MediasoupSocketApi implements IMediasoupApi {
     private readonly log;
-    private readonly timeouts;
     readonly client: RxSocketClient;
     constructor(url: string, worker: number, token: string, log?: typeof console.log);
     initSocket(): Promise<void>;
