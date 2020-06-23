@@ -31,7 +31,13 @@ import {
     RecordingRequest,
     StreamKindsData,
     StreamRtmpRequest,
-    KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest, StreamKindData
+    KindsByFileInput,
+    KindsData,
+    PushStreamOptionsRequest,
+    PushStreamOptionsResponse,
+    PushStreamRequest,
+    StreamKindData,
+    StreamListenData
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi} from './i-mediasoup-api';
@@ -177,7 +183,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async requestKeyframe(json:ConsumerData):Promise<void>{
         await this.request(ACTION.REQUEST_KEYFRAME, json);
     }
-    async listenStreamStarted(json:StreamKindData):Promise<boolean>{
+    async listenStreamStarted(json:StreamListenData):Promise<boolean>{
         return (await this.request(ACTION.LISTEN_STREAM_STARTED,json) as boolean);
     }
     async listenStreamStopped(json:StreamKindData):Promise<boolean>{

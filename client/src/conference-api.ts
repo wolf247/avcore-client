@@ -169,8 +169,20 @@ export class ConferenceApi extends EventEmitter{
                 console.log('on stream stopped',kind);
                 this.unsubscribeTrack(kind);
             });
+        let origin;
+        if(this.configs.origin && this.configs.url!==this.configs.origin.url){
+            const {token,worker,url}=this.configs;
+            origin={
+                target: {url, worker, token},
+                source: {
+                    url:this.configs.origin.url,
+                    worker:this.configs.origin.worker,
+                    token:this.configs.origin.token||token,
+                }
+            }
+        }
         for (const kind of ['audio','video'] as MediaKind[]){
-            promises.push(this.api.listenStreamStarted({stream,kind}),this.api.listenStreamStopped({stream,kind}));
+            promises.push(this.api.listenStreamStarted({stream,kind,origin}),this.api.listenStreamStopped({stream,kind}));
         }
         await Promise.all(promises);
         return mediaStream;
@@ -197,17 +209,6 @@ export class ConferenceApi extends EventEmitter{
         const  rtpCapabilities:RtpCapabilities  = this.device.rtpCapabilities as RtpCapabilities;
         try{
             const consumeData:ConsumeRequest={ rtpCapabilities,stream,kind,transportId:this.transport.id};
-            if(this.configs.origin && this.configs.url!==this.configs.origin.url){
-                const {token,worker,url}=this.configs;
-                consumeData.origin={
-                    target: {url, worker, token},
-                    source: {
-                        url:this.configs.origin.url,
-                        worker:this.configs.origin.worker,
-                        token:this.configs.origin.token||token,
-                    }
-                }
-            }
             const data=await this.api.consume(consumeData);
             const layers=this.layers.get(kind);
             if(layers){

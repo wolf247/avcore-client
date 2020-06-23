@@ -1,4 +1,4 @@
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PushStreamInputsRequest, PushStreamInputsResponse, PullStreamInputsRequest, PullStreamInputsResponse, RecordingRequest, StreamKindsData, StreamRtmpRequest, KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest, StreamKindData } from './client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PushStreamInputsRequest, PushStreamInputsResponse, PullStreamInputsRequest, PullStreamInputsResponse, RecordingRequest, StreamKindsData, StreamRtmpRequest, KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest, StreamKindData, StreamListenData } from './client-interfaces';
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { IMediasoupApi } from './i-mediasoup-api';
 import { RxSocketClient } from 'rx-socket-io.client';
@@ -44,7 +44,7 @@ export declare class MediasoupSocketApi implements IMediasoupApi {
     pullFromServerInputs(json: PullStreamInputsRequest): Promise<PullStreamInputsResponse>;
     kindsByFile(json: KindsByFileInput): Promise<KindsData>;
     requestKeyframe(json: ConsumerData): Promise<void>;
-    listenStreamStarted(json: StreamKindData): Promise<boolean>;
+    listenStreamStarted(json: StreamListenData): Promise<boolean>;
     listenStreamStopped(json: StreamKindData): Promise<boolean>;
     rtmpStreaming(json: StreamRtmpRequest): Promise<void>;
     clear(): void;

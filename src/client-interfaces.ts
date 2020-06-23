@@ -43,7 +43,6 @@ export interface ConsumeRequestOriginData {
     target:ConsumeRequestOriginDataServer
 }
 export interface ConsumeRequest extends StreamKindData{
-    origin?:ConsumeRequestOriginData
     rtpCapabilities: RtpCapabilities
     transportId:string
 }
@@ -118,6 +117,9 @@ export interface StreamKindsData extends StreamData{
 }
 export interface StreamKindData extends StreamData{
     kind:MediaKind
+}
+export interface StreamListenData extends StreamKindData{
+    origin?:ConsumeRequestOriginData
 }
 export interface StreamData {
     stream:string
