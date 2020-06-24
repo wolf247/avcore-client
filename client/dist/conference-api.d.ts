@@ -25,7 +25,7 @@ export declare interface ConferenceApi {
     on(event: 'removetrack', listener: (event: MediaStreamTrackEvent) => void): this;
 }
 export declare class ConferenceApi extends EventEmitter {
-    private readonly api;
+    private api;
     private readonly configs;
     private readonly device;
     private readonly connectors;

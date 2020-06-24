@@ -29,7 +29,7 @@ export declare interface ConferenceApi {
     on(event: 'removetrack', listener: (event:MediaStreamTrackEvent) => void): this
 }
 export class ConferenceApi extends EventEmitter{
-    private readonly api:MediasoupSocketApi;
+    private api:MediasoupSocketApi;
     private readonly configs:ConferenceConfig;
     private readonly device:Device;
     private readonly connectors:Map<MediaKind,Consumer|Producer|number> = new Map();
@@ -126,6 +126,7 @@ export class ConferenceApi extends EventEmitter{
             await this.api.initSocket();
             this.disconnectSubscription=this.api.client.listen('disconnect').subscribe(async ()=>{
                 console.log('restarting by disconnect');
+                this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
                 await this.api.initSocket();
                 await this.restartAll();
             });
@@ -231,11 +232,6 @@ export class ConferenceApi extends EventEmitter{
                     }catch (e) {}
                     if(_consumer && typeof _consumer!=='number' && consumer.id===_consumer.id){
                         this.connectors.delete(consumer.track.kind as MediaKind);
-                        if(this.mediaStream){
-                            if(this.transport && this.configs.kinds.includes(kind)) {
-                                await this.subscribeTrack(kind);
-                            }
-                        }
                     }
                 }
             });
