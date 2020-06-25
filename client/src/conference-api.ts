@@ -195,9 +195,6 @@ export class ConferenceApi extends EventEmitter{
                 connector.close();
                 connector.emit('close');
             }
-            else {
-                this.connectors.delete(kind)
-            }
 
         }
     }
