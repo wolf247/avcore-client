@@ -105,7 +105,7 @@ export class ConferenceApi extends EventEmitter{
             this.configs.kinds=kinds;
             for (const kind of oldKinds){
                 if(!kinds.includes(kind)){
-                   this.unsubscribeTrack(kind,true)
+                   this.unsubscribeTrack(kind)
                 }
             }
             const promises:Promise<void>[]=[];
@@ -188,7 +188,7 @@ export class ConferenceApi extends EventEmitter{
         await Promise.all(promises);
         return mediaStream;
     }
-    private unsubscribeTrack(kind:MediaKind,hard:boolean=false):void {
+    private unsubscribeTrack(kind:MediaKind):void {
         const connector=this.connectors.get(kind);
         if(connector){
             if(typeof connector!=='number'){
@@ -196,9 +196,7 @@ export class ConferenceApi extends EventEmitter{
                 connector.emit('close');
             }
             else {
-                if(hard){
-                    this.connectors.delete(kind)
-                }
+                this.connectors.delete(kind)
             }
 
         }
@@ -237,7 +235,7 @@ export class ConferenceApi extends EventEmitter{
                     }
                 }
             });
-            if(this.connectors.get(kind as MediaKind)===d){
+            if(this.connectors.get(kind as MediaKind)===d && this.configs.kinds.includes(kind)){
                 this.connectors.set(kind as MediaKind,consumer);
                 this.emit('newConsumerId',{id:consumer.id,kind});
 
