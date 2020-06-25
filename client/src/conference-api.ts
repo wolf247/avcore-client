@@ -105,7 +105,7 @@ export class ConferenceApi extends EventEmitter{
             this.configs.kinds=kinds;
             for (const kind of oldKinds){
                 if(!kinds.includes(kind)){
-                   this.unsubscribeTrack(kind)
+                   this.unsubscribeTrack(kind,true)
                 }
             }
             const promises:Promise<void>[]=[];
@@ -188,12 +188,17 @@ export class ConferenceApi extends EventEmitter{
         await Promise.all(promises);
         return mediaStream;
     }
-    private unsubscribeTrack(kind:MediaKind):void {
+    private unsubscribeTrack(kind:MediaKind,hard:boolean=false):void {
         const connector=this.connectors.get(kind);
         if(connector){
             if(typeof connector!=='number'){
                 connector.close();
                 connector.emit('close');
+            }
+            else {
+                if(hard){
+                    this.connectors.delete(kind)
+                }
             }
 
         }
