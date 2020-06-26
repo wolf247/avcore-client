@@ -125,7 +125,7 @@ export interface StreamData {
 export interface StreamFileRequest extends StreamKindsData, KindsByFileInput, StreamingOptions {
     restartOnExit?: boolean;
     additionalInputOptions?: {
-        [kind in MediaKind]?: string;
+        [kind in MediaKind]?: string[];
     };
 }
 export interface StreamRtmpRequest extends StreamKindsData, StreamingOptions {
