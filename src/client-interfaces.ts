@@ -106,6 +106,7 @@ export interface RecordingData extends StreamKindsData{
 }
 export interface RecordingRequest extends StreamKindsData{
     layer?:number
+    origin?:ConsumeRequestOriginData
 }
 export interface KindsData{
     kinds:MediaKind[]
@@ -124,11 +125,12 @@ export interface StreamListenData extends StreamKindData{
 export interface StreamData {
     stream:string
 }
-export interface StreamFileRequest extends StreamKindsData,KindsByFileInput{
+export interface StreamFileRequest extends StreamKindsData,KindsByFileInput,StreamingOptions{
     restartOnExit?:boolean
     checkKinds?:boolean
-    additionalInputOptions?:string[]
-    additionalOutputOptions?:string[]
+    additionalInputOptions?:{
+        [kind in MediaKind]?: string
+    }
 }
 export interface StreamRtmpRequest extends StreamKindsData,StreamingOptions{
     rtmpUrl:string
