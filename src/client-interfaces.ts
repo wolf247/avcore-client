@@ -127,7 +127,6 @@ export interface StreamData {
 }
 export interface StreamFileRequest extends StreamKindsData,KindsByFileInput,StreamingOptions{
     restartOnExit?:boolean
-    checkKinds?:boolean
     additionalInputOptions?:{
         [kind in MediaKind]?: string
     }
