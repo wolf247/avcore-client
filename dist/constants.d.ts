@@ -45,7 +45,7 @@ export declare enum EVENT {
     STREAM_STOPPED = "streamStopped"
 }
 export declare enum STAT {
-    API = "api",
+    STATS = "stats",
     TRAFFIC = "traffic",
     CPU = "cpu"
 }
