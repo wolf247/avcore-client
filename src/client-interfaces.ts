@@ -129,8 +129,8 @@ export interface StreamFileRequest extends StreamKindsData,KindsByFileInput,Stre
     restartOnExit?:boolean
     additionalInputOptions?:string[]
 }
-export interface StreamRtmpRequest extends StreamKindsData,StreamingOptions{
-    rtmpUrl:string
+export interface LiveStreamRequest extends StreamKindsData,StreamingOptions{
+    url:string
     restartOnExit?:boolean
 }
 export interface StreamingOptions{

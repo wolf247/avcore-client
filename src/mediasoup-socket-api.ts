@@ -30,7 +30,7 @@ import {
     PullStreamInputsResponse,
     RecordingRequest,
     StreamKindsData,
-    StreamRtmpRequest,
+    LiveStreamRequest,
     KindsByFileInput,
     KindsData,
     PushStreamOptionsRequest,
@@ -189,8 +189,8 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async listenStreamStopped(json:StreamKindData):Promise<boolean>{
         return (await this.request(ACTION.LISTEN_STREAM_STOPPED,json) as boolean);
     }
-    async rtmpStreaming(json:StreamRtmpRequest):Promise<void>{
-        await this.request(ACTION.RTMP_STREAMING,json);
+    async liveStreaming(json:LiveStreamRequest):Promise<void>{
+        await this.request(ACTION.LIVE_STREAMING,json);
     }
     clear():void{
         this.client.close();

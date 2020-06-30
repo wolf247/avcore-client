@@ -12,7 +12,7 @@ export enum ACTION {
     PAUSE_PRODUCER='pauseProducer',
     CLOSE_PRODUCER='closeProducer',
     FILE_STREAMING='fileStreaming',
-    RTMP_STREAMING='rtmpStreaming',
+    LIVE_STREAMING='liveStreaming',
     STOP_FILE_STREAMING='stopFileStreaming',
     START_RECORDING="startRecording",
     STOP_RECORDING="stopRecording",
@@ -43,6 +43,11 @@ export enum ACTION {
 export enum EVENT {
     STREAM_STARTED='streamStarted',
     STREAM_STOPPED='streamStopped'
+}
+export enum STAT {
+    API="api",
+    TRAFFIC='traffic',
+    CPU='cpu'
 }
 export enum ERROR {UNKNOWN=500,UNAUTHORIZED=401,INVALID_TRANSPORT=530,INVALID_PRODUCER=531,INVALID_CONSUMER=532,INVALID_STREAM=533,INVALID_OPERATION=534,INVALID_WORKER=535,INVALID_INPUT=536}
 export enum API_OPERATION {SUBSCRIBE,PUBLISH,RECORDING,STREAMING}

@@ -36,7 +36,7 @@ import {
     PushStreamOptionsResponse,
     PushStreamOptionsRequest,
     PushStreamRequest,
-    StreamRtmpRequest, StreamKindData, StreamListenData
+    LiveStreamRequest, StreamKindData, StreamListenData
 } from './client-interfaces';
 import {Observable} from 'rxjs/index';
 export interface IMediasoupApiClient {
@@ -59,7 +59,7 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.CREATE_TRANSPORT]():Promise<TransportOptions>
     [ACTION.CONNECT_TRANSPORT](json:ConnectTransportRequest):Promise<void>
     [ACTION.FILE_STREAMING](json:StreamFileRequest):Promise<void>
-    [ACTION.RTMP_STREAMING](json:StreamRtmpRequest):Promise<void>
+    [ACTION.LIVE_STREAMING](json:LiveStreamRequest):Promise<void>
     [ACTION.STOP_FILE_STREAMING](json:StreamKindsData):Promise<void>
     [ACTION.START_RECORDING](json:RecordingRequest):Promise<void>
     [ACTION.STOP_RECORDING](json:RecordingData):Promise<void>

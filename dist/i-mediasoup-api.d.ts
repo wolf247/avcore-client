@@ -1,6 +1,6 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION, EVENT } from './constants';
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData, KindsByFileInput, KindsData, PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, StreamRtmpRequest, StreamKindData, StreamListenData } from './client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData, KindsByFileInput, KindsData, PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, LiveStreamRequest, StreamKindData, StreamListenData } from './client-interfaces';
 import { Observable } from 'rxjs/index';
 export interface IMediasoupApiClient {
     listen<T>(event: EVENT): Observable<T>;
@@ -22,7 +22,7 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.CREATE_TRANSPORT](): Promise<TransportOptions>;
     [ACTION.CONNECT_TRANSPORT](json: ConnectTransportRequest): Promise<void>;
     [ACTION.FILE_STREAMING](json: StreamFileRequest): Promise<void>;
-    [ACTION.RTMP_STREAMING](json: StreamRtmpRequest): Promise<void>;
+    [ACTION.LIVE_STREAMING](json: LiveStreamRequest): Promise<void>;
     [ACTION.STOP_FILE_STREAMING](json: StreamKindsData): Promise<void>;
     [ACTION.START_RECORDING](json: RecordingRequest): Promise<void>;
     [ACTION.STOP_RECORDING](json: RecordingData): Promise<void>;

@@ -12,7 +12,7 @@ export declare enum ACTION {
     PAUSE_PRODUCER = "pauseProducer",
     CLOSE_PRODUCER = "closeProducer",
     FILE_STREAMING = "fileStreaming",
-    RTMP_STREAMING = "rtmpStreaming",
+    LIVE_STREAMING = "liveStreaming",
     STOP_FILE_STREAMING = "stopFileStreaming",
     START_RECORDING = "startRecording",
     STOP_RECORDING = "stopRecording",
@@ -43,6 +43,11 @@ export declare enum ACTION {
 export declare enum EVENT {
     STREAM_STARTED = "streamStarted",
     STREAM_STOPPED = "streamStopped"
+}
+export declare enum STAT {
+    API = "api",
+    TRAFFIC = "traffic",
+    CPU = "cpu"
 }
 export declare enum ERROR {
     UNKNOWN = 500,
