@@ -75,6 +75,10 @@ export class ConferenceApi extends EventEmitter{
     async addTrack(track:MediaStreamTrack):Promise<void>{
         this.log('addTrack',track);
         if(this.operation===API_OPERATION.PUBLISH && this.mediaStream){
+            const kind=track.kind as MediaKind;
+            if(!this.configs.kinds.includes(kind)){
+                this.configs.kinds.push(kind)
+            }
             this.mediaStream.addTrack(track);
             this.emit("addtrack",new MediaStreamTrackEvent("addtrack",{track}));
             await this.publishTrack(track);
