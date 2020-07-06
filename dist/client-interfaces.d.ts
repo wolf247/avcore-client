@@ -182,10 +182,12 @@ export interface PullStreamInputsResponse {
         [id: string]: string;
     };
 }
-export interface ConferenceInputOrigin {
-    token?: string;
+export interface ConferenceServer {
     url: string;
     worker: number;
+}
+export interface ConferenceInputOrigin extends ConferenceServer {
+    token?: string;
 }
 export interface ConferenceInput {
     stopTracks?: boolean;
