@@ -247,10 +247,12 @@ export interface MixerPipeLiveData extends MixerInput,StreamKindsData{
 export interface MixerPipeRecordingData extends MixerInput,KindsData{
     type:MIXER_PIPE_TYPE.RECORDING
 }
-export interface MixerPipeRtmpgData extends MixerInput,KindsData{
+export interface MixerPipeRtmpData extends MixerInput,KindsData{
     type:MIXER_PIPE_TYPE.RTMP
     url:string
 }
 export interface MixerPipeInput{
     pipeId:string
+}
+export interface MixerPipeStopInput extends MixerPipeInput,MixerInput{
 }

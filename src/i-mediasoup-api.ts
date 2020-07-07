@@ -42,7 +42,13 @@ import {
     MixerInput,
     MixerAddAudioData,
     MixerAddVideoData,
-    MixerUpdateData, MixerRemoveData, MixerPipeLiveData, MixerPipeRecordingData, MixerPipeRtmpgData, MixerPipeInput
+    MixerUpdateData,
+    MixerRemoveData,
+    MixerPipeLiveData,
+    MixerPipeRecordingData,
+    MixerPipeRtmpData,
+    MixerPipeInput,
+    MixerPipeStopInput
 } from './client-interfaces';
 import {Observable} from 'rxjs/index';
 export interface IMediasoupApiClient {
@@ -94,7 +100,7 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.MIXER_ADD](json:MixerAddAudioData|MixerAddVideoData):Promise<void>
     [ACTION.MIXER_UPDATE](json:MixerUpdateData):Promise<void>
     [ACTION.MIXER_REMOVE](json:MixerRemoveData):Promise<void>
-    [ACTION.MIXER_PIPE_START](json:MixerPipeLiveData|MixerPipeRecordingData|MixerPipeRtmpgData):Promise<MixerPipeInput>
-    [ACTION.MIXER_PIPE_STOP](json:MixerPipeInput):Promise<void>
+    [ACTION.MIXER_PIPE_START](json:MixerPipeLiveData|MixerPipeRecordingData|MixerPipeRtmpData):Promise<MixerPipeInput>
+    [ACTION.MIXER_PIPE_STOP](json:MixerPipeStopInput):Promise<void>
 
 }

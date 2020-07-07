@@ -1,4 +1,4 @@
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PushStreamInputsRequest, PushStreamInputsResponse, PullStreamInputsRequest, PullStreamInputsResponse, RecordingRequest, StreamKindsData, LiveStreamRequest, KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest, StreamKindData, StreamListenData, MixerUpdateData, MixerRemoveData, MixerInput, MixerAddAudioData, MixerAddVideoData, MixerPipeLiveData, MixerPipeInput, MixerPipeRtmpgData, MixerPipeRecordingData } from './client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PushStreamInputsRequest, PushStreamInputsResponse, PullStreamInputsRequest, PullStreamInputsResponse, RecordingRequest, StreamKindsData, LiveStreamRequest, KindsByFileInput, KindsData, PushStreamOptionsRequest, PushStreamOptionsResponse, PushStreamRequest, StreamKindData, StreamListenData, MixerUpdateData, MixerRemoveData, MixerInput, MixerAddAudioData, MixerAddVideoData, MixerPipeLiveData, MixerPipeInput, MixerPipeRtmpData, MixerPipeRecordingData, MixerPipeStopInput } from './client-interfaces';
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { IMediasoupApi } from './i-mediasoup-api';
 import { RxSocketClient } from 'rx-socket-io.client';
@@ -52,8 +52,8 @@ export declare class MediasoupSocketApi implements IMediasoupApi {
     mixerAdd(json: MixerAddAudioData | MixerAddVideoData): Promise<void>;
     mixerUpdate(json: MixerUpdateData): Promise<void>;
     mixerRemove(json: MixerRemoveData): Promise<void>;
-    mixerPipeStart(json: MixerPipeLiveData | MixerPipeRecordingData | MixerPipeRtmpgData): Promise<MixerPipeInput>;
-    mixerPipeStop(json: MixerPipeInput): Promise<void>;
+    mixerPipeStart(json: MixerPipeLiveData | MixerPipeRecordingData | MixerPipeRtmpData): Promise<MixerPipeInput>;
+    mixerPipeStop(json: MixerPipeStopInput): Promise<void>;
     clear(): void;
     private request;
 }

@@ -1,6 +1,6 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION, EVENT } from './constants';
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData, KindsByFileInput, KindsData, PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, LiveStreamRequest, StreamKindData, StreamListenData, MixerInput, MixerAddAudioData, MixerAddVideoData, MixerUpdateData, MixerRemoveData, MixerPipeLiveData, MixerPipeRecordingData, MixerPipeRtmpgData, MixerPipeInput } from './client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData, KindsByFileInput, KindsData, PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, LiveStreamRequest, StreamKindData, StreamListenData, MixerInput, MixerAddAudioData, MixerAddVideoData, MixerUpdateData, MixerRemoveData, MixerPipeLiveData, MixerPipeRecordingData, MixerPipeRtmpData, MixerPipeInput, MixerPipeStopInput } from './client-interfaces';
 import { Observable } from 'rxjs/index';
 export interface IMediasoupApiClient {
     listen<T>(event: EVENT): Observable<T>;
@@ -51,6 +51,6 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.MIXER_ADD](json: MixerAddAudioData | MixerAddVideoData): Promise<void>;
     [ACTION.MIXER_UPDATE](json: MixerUpdateData): Promise<void>;
     [ACTION.MIXER_REMOVE](json: MixerRemoveData): Promise<void>;
-    [ACTION.MIXER_PIPE_START](json: MixerPipeLiveData | MixerPipeRecordingData | MixerPipeRtmpgData): Promise<MixerPipeInput>;
-    [ACTION.MIXER_PIPE_STOP](json: MixerPipeInput): Promise<void>;
+    [ACTION.MIXER_PIPE_START](json: MixerPipeLiveData | MixerPipeRecordingData | MixerPipeRtmpData): Promise<MixerPipeInput>;
+    [ACTION.MIXER_PIPE_STOP](json: MixerPipeStopInput): Promise<void>;
 }
