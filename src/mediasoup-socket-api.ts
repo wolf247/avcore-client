@@ -198,8 +198,8 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async liveStreaming(json:LiveStreamRequest):Promise<void>{
         await this.request(ACTION.LIVE_STREAMING,json);
     }
-    async mixerStart(json:KindsData):Promise<MixerInput>{
-        return (await this.request(ACTION.MIXER_START,json) as MixerInput);
+    async mixerStart():Promise<MixerInput>{
+        return (await this.request(ACTION.MIXER_START) as MixerInput);
     }
     async mixerClose(json:MixerInput):Promise<void>{
         await this.request(ACTION.MIXER_CLOSE,json);
