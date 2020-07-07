@@ -43,7 +43,9 @@ export declare enum ACTION {
     MIXER_CLOSE = "mixerClose",
     MIXER_ADD = "mixerAdd",
     MIXER_REMOVE = "mixerRemove",
-    MIXER_UPDATE = "mixerUpdate"
+    MIXER_UPDATE = "mixerUpdate",
+    MIXER_PIPE_START = "mixerPipeStart",
+    MIXER_PIPE_STOP = "mixerPipeStop"
 }
 export declare enum EVENT {
     STREAM_STARTED = "streamStarted",
@@ -70,4 +72,9 @@ export declare enum API_OPERATION {
     PUBLISH = 1,
     RECORDING = 2,
     STREAMING = 3
+}
+export declare enum MIXER_PIPE_TYPE {
+    LIVE = 0,
+    RECORDING = 1,
+    RTMP = 2
 }

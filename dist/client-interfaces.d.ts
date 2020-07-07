@@ -1,6 +1,7 @@
 import { MediaKind, RtpCapabilities, RtpEncodingParameters, RtpParameters } from 'mediasoup-client/lib/RtpParameters';
 import { ProducerCodecOptions } from 'mediasoup-client/lib/Producer';
 import { DtlsParameters } from 'mediasoup-client/lib/Transport';
+import { MIXER_PIPE_TYPE } from './constants';
 export interface ConsumerData {
     consumerId: string;
 }
@@ -237,4 +238,17 @@ export interface MixerAddAudioData extends MixerInput, StreamData {
     kind: 'audio';
 }
 export interface MixerRemoveData extends MixerInput, StreamKindData {
+}
+export interface MixerPipeLiveData extends MixerInput, StreamKindsData {
+    type: MIXER_PIPE_TYPE.LIVE;
+}
+export interface MixerPipeRecordingData extends MixerInput, KindsData {
+    type: MIXER_PIPE_TYPE.RECORDING;
+}
+export interface MixerPipeRtmpgData extends MixerInput, KindsData {
+    type: MIXER_PIPE_TYPE.RTMP;
+    url: string;
+}
+export interface MixerPipeInput {
+    pipeId: string;
 }
