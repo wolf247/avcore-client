@@ -38,7 +38,12 @@ export declare enum ACTION {
     KINDS_BY_FILE = "kindsByFile",
     REQUEST_KEYFRAME = "requestKeyframe",
     LISTEN_STREAM_STARTED = "listenStreamStarted",
-    LISTEN_STREAM_STOPPED = "listenStreamStopped"
+    LISTEN_STREAM_STOPPED = "listenStreamStopped",
+    MIXER_START = "mixerStart",
+    MIXER_CLOSE = "mixerClose",
+    MIXER_ADD = "mixerAdd",
+    MIXER_REMOVE = "mixerRemove",
+    MIXER_UPDATE = "mixerUpdate"
 }
 export declare enum EVENT {
     STREAM_STARTED = "streamStarted",

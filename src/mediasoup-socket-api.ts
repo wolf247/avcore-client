@@ -37,7 +37,7 @@ import {
     PushStreamOptionsResponse,
     PushStreamRequest,
     StreamKindData,
-    StreamListenData
+    StreamListenData, MixerUpdateData, MixerRemoveData, MixerInput, MixerAddAudioData, MixerAddVideoData
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi} from './i-mediasoup-api';
@@ -191,6 +191,21 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     async liveStreaming(json:LiveStreamRequest):Promise<void>{
         await this.request(ACTION.LIVE_STREAMING,json);
+    }
+    async mixerStart(json:StreamKindsData):Promise<MixerInput>{
+        return (await this.request(ACTION.MIXER_START,json) as MixerInput);
+    }
+    async mixerClose(json:MixerInput):Promise<void>{
+        await this.request(ACTION.MIXER_CLOSE,json);
+    }
+    async mixerAdd(json:MixerAddAudioData|MixerAddVideoData):Promise<void>{
+        await this.request(ACTION.MIXER_ADD,json);
+    }
+    async mixerUpdate(json:MixerUpdateData):Promise<void>{
+        await this.request(ACTION.MIXER_UPDATE,json);
+    }
+    async mixerRemove(json:MixerRemoveData):Promise<void>{
+        await this.request(ACTION.MIXER_REMOVE,json);
     }
     clear():void{
         this.client.close();

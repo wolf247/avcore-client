@@ -219,3 +219,24 @@ export interface ListData {
 export interface FilePathInput {
     filePath:string;
 }
+export interface MixerInput {
+    mixerId:string
+}
+export interface MixerOptions {
+    x:number
+    y:number
+    width:number
+    height:number
+    z:number
+}
+export interface MixerUpdateData extends MixerInput,StreamData{
+    options:MixerOptions
+}
+export interface MixerAddVideoData extends MixerUpdateData{
+    kind:'video'
+}
+export interface MixerAddAudioData extends MixerInput,StreamData{
+    kind:'audio'
+}
+export interface MixerRemoveData extends MixerInput,StreamKindData{
+}

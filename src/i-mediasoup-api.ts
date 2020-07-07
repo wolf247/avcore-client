@@ -36,7 +36,13 @@ import {
     PushStreamOptionsResponse,
     PushStreamOptionsRequest,
     PushStreamRequest,
-    LiveStreamRequest, StreamKindData, StreamListenData
+    LiveStreamRequest,
+    StreamKindData,
+    StreamListenData,
+    MixerInput,
+    MixerAddAudioData,
+    MixerAddVideoData,
+    MixerUpdateData, MixerRemoveData
 } from './client-interfaces';
 import {Observable} from 'rxjs/index';
 export interface IMediasoupApiClient {
@@ -83,4 +89,9 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.REQUEST_KEYFRAME](json:ConsumerData):Promise<void>
     [ACTION.LISTEN_STREAM_STARTED](json:StreamListenData):Promise<boolean>
     [ACTION.LISTEN_STREAM_STOPPED](json:StreamKindData):Promise<boolean>
+    [ACTION.MIXER_START](json:StreamKindsData):Promise<MixerInput>
+    [ACTION.MIXER_CLOSE](json:MixerInput):Promise<void>
+    [ACTION.MIXER_ADD](json:MixerAddAudioData|MixerAddVideoData):Promise<void>
+    [ACTION.MIXER_UPDATE](json:MixerUpdateData):Promise<void>
+    [ACTION.MIXER_REMOVE](json:MixerRemoveData):Promise<void>
 }
