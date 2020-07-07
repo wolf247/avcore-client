@@ -102,5 +102,4 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.MIXER_REMOVE](json:MixerRemoveData):Promise<void>
     [ACTION.MIXER_PIPE_START](json:MixerPipeLiveData|MixerPipeRecordingData|MixerPipeRtmpData):Promise<MixerPipeInput>
     [ACTION.MIXER_PIPE_STOP](json:MixerPipeStopInput):Promise<void>
-
 }
