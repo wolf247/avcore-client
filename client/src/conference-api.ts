@@ -259,7 +259,7 @@ export class ConferenceApi extends EventEmitter{
             if(e){
                 if(e.errorId===ERROR.INVALID_STREAM){
                 }
-                else if(e.errorId===ERROR.INVALID_TRANSPORT){
+                else if(e.errorId===ERROR.INVALID_TRANSPORT || e.errorId===ERROR.INVALID_CONSUMER){
                     this.restartAll().then(()=>{}).catch(()=>{});
                 }
                 else {
