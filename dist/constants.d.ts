@@ -71,7 +71,8 @@ export declare enum API_OPERATION {
     SUBSCRIBE = 0,
     PUBLISH = 1,
     RECORDING = 2,
-    STREAMING = 3
+    STREAMING = 3,
+    MIXER = 4
 }
 export declare enum MIXER_PIPE_TYPE {
     LIVE = 0,
