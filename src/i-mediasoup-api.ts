@@ -32,7 +32,7 @@ import {
     RecordingRequest,
     StreamKindsData,
     KindsByFileInput,
-    KindsData,
+    KindsOptionsData,
     PushStreamOptionsResponse,
     PushStreamOptionsRequest,
     PushStreamRequest,
@@ -91,7 +91,7 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.PUSH_TO_SERVER_OPTIONS](json:PushStreamOptionsRequest):Promise<PushStreamOptionsResponse>
     [ACTION.PUSH_TO_SERVER](json:PushStreamRequest):Promise<void>
     [ACTION.PULL_FROM_SERVER_INPUTS](json:PullStreamInputsRequest):Promise<PullStreamInputsResponse>
-    [ACTION.KINDS_BY_FILE](json:KindsByFileInput):Promise<KindsData>
+    [ACTION.KINDS_BY_FILE](json:KindsByFileInput):Promise<KindsOptionsData>
     [ACTION.REQUEST_KEYFRAME](json:ConsumerData):Promise<void>
     [ACTION.LISTEN_STREAM_STARTED](json:StreamListenData):Promise<boolean>
     [ACTION.LISTEN_STREAM_STOPPED](json:StreamKindData):Promise<boolean>

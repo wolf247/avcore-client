@@ -106,10 +106,13 @@ export interface RecordingRequest extends StreamKindsData {
     layer?: number;
     origin?: ConsumeRequestOriginData;
 }
-export interface KindsData {
+export interface KindsOptionsData {
     kinds: MediaKind[];
     width?: number;
     height?: number;
+}
+export interface KindsData {
+    kinds?: MediaKind[];
 }
 export interface StreamKindsData extends StreamData {
     kinds?: MediaKind[];
@@ -131,11 +134,13 @@ export interface LiveStreamRequest extends StreamKindsData, StreamingOptions {
     url: string;
     restartOnExit?: boolean;
 }
-export interface StreamingOptions {
+export interface BitrateOptions {
+    videoBitrate?: string;
+}
+export interface StreamingOptions extends BitrateOptions {
     width?: number;
     height?: number;
     frameRate?: number;
-    videoBitrate?: string;
 }
 export interface KindsByFileInput {
     filePath: string;
@@ -239,13 +244,15 @@ export interface MixerAddAudioData extends MixerInput, StreamData {
 }
 export interface MixerRemoveData extends MixerInput, StreamKindData {
 }
-export interface MixerPipeLiveData extends MixerInput, StreamKindsData {
+export interface MixerPipeData extends MixerInput, KindsData, BitrateOptions {
+}
+export interface MixerPipeLiveData extends MixerPipeData {
     type: MIXER_PIPE_TYPE.LIVE;
 }
-export interface MixerPipeRecordingData extends MixerInput, KindsData {
+export interface MixerPipeRecordingData extends MixerPipeData {
     type: MIXER_PIPE_TYPE.RECORDING;
 }
-export interface MixerPipeRtmpData extends MixerInput, KindsData {
+export interface MixerPipeRtmpData extends MixerPipeData {
     type: MIXER_PIPE_TYPE.RTMP;
     url: string;
 }

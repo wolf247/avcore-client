@@ -32,7 +32,7 @@ import {
     StreamKindsData,
     LiveStreamRequest,
     KindsByFileInput,
-    KindsData,
+    KindsOptionsData,
     PushStreamOptionsRequest,
     PushStreamOptionsResponse,
     PushStreamRequest,
@@ -183,8 +183,8 @@ export class MediasoupSocketApi implements IMediasoupApi{
         return (await this.request(ACTION.PULL_FROM_SERVER_INPUTS,json) as PullStreamInputsResponse);
     }
 
-    async kindsByFile(json:KindsByFileInput):Promise<KindsData>{
-        return (await this.request(ACTION.KINDS_BY_FILE,json) as KindsData);
+    async kindsByFile(json:KindsByFileInput):Promise<KindsOptionsData>{
+        return (await this.request(ACTION.KINDS_BY_FILE,json) as KindsOptionsData);
     }
     async requestKeyframe(json:ConsumerData):Promise<void>{
         await this.request(ACTION.REQUEST_KEYFRAME, json);
