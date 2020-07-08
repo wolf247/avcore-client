@@ -246,7 +246,7 @@ export interface MixerRemoveData extends MixerInput, StreamKindData {
 }
 export interface MixerPipeData extends MixerInput, KindsData, BitrateOptions {
 }
-export interface MixerPipeLiveData extends MixerPipeData {
+export interface MixerPipeLiveData extends MixerPipeData, StreamData {
     type: MIXER_PIPE_TYPE.LIVE;
 }
 export interface MixerPipeRecordingData extends MixerPipeData {
