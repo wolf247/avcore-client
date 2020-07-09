@@ -15,7 +15,7 @@ export class NexmoUtils {
                 "eventUrl": [eventUrl]
             }]
     }
-    static pinCodeChoiceRepeat(text:string="Sorry, this pin code is invalid.",maxDigits:number,eventUrl:string,pinCodeChoiceText?:string){
+    static pinCodeChoiceRepeat(maxDigits:number,eventUrl:string,text:string="Sorry, this pin code is invalid.",pinCodeChoiceText?:string){
         return [
             {
                 "action": "talk",
@@ -23,11 +23,10 @@ export class NexmoUtils {
             },
             ...NexmoUtils.pinCodeChoice(maxDigits,eventUrl,pinCodeChoiceText)]
     }
-    static mixerConnect(url:string, worker:number, mixerId:string){
+    static mixerConnect(url:string, worker:number, mixerId:string, text:string='Connecting to meeting. Please, wait.'){
         return [
             {
-                "action": "talk",
-                "text": 'Connecting to meeting. Please, wait.'
+                "action": "talk", text
             },
             {
                 "action": "connect",

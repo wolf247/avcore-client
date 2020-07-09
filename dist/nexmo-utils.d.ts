@@ -14,7 +14,7 @@ export declare class NexmoUtils {
         text?: undefined;
         bargeIn?: undefined;
     })[];
-    static pinCodeChoiceRepeat(text: string | undefined, maxDigits: number, eventUrl: string, pinCodeChoiceText?: string): ({
+    static pinCodeChoiceRepeat(maxDigits: number, eventUrl: string, text?: string, pinCodeChoiceText?: string): ({
         action: string;
         text: string;
         bargeIn: boolean;
@@ -32,7 +32,7 @@ export declare class NexmoUtils {
         action: string;
         text: string;
     })[];
-    static mixerConnect(url: string, worker: number, mixerId: string): ({
+    static mixerConnect(url: string, worker: number, mixerId: string, text?: string): ({
         action: string;
         text: string;
         endpoint?: undefined;
