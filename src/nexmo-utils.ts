@@ -23,7 +23,7 @@ export class NexmoUtils {
             },
             ...NexmoUtils.pinCodeChoice(maxDigits,eventUrl,pinCodeChoiceText)]
     }
-    static mixerConnect(url:string, worker:number, mixerId:string, text:string='Connecting to meeting. Please, wait.'){
+    static mixerConnect(url:string, headers:{worker:number, mixerId:string, stream:string}, text:string='Connecting to meeting. Please, wait.'){
         return [
             {
                 "action": "talk", text
@@ -35,9 +35,7 @@ export class NexmoUtils {
                         "type": "websocket",
                         "uri": `${url.replace('http','ws')}/${TELEPHONY.NEXMO}`,
                         "content-type": "audio/l16;rate=16000",
-                        "headers": {
-                            mixerId
-                        }
+                        headers
                     }
                 ]
             }]

@@ -32,7 +32,11 @@ export declare class NexmoUtils {
         action: string;
         text: string;
     })[];
-    static mixerConnect(url: string, worker: number, mixerId: string, text?: string): ({
+    static mixerConnect(url: string, headers: {
+        worker: number;
+        mixerId: string;
+        stream: string;
+    }, text?: string): ({
         action: string;
         text: string;
         endpoint?: undefined;
@@ -43,7 +47,9 @@ export declare class NexmoUtils {
             uri: string;
             "content-type": string;
             headers: {
+                worker: number;
                 mixerId: string;
+                stream: string;
             };
         }[];
         text?: undefined;
