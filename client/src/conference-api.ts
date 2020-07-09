@@ -358,8 +358,6 @@ export class ConferenceApi extends EventEmitter{
         delete this.operation;
         if(hard && this.disconnectSubscription){
             this.disconnectSubscription.unsubscribe();
-        }
-        if(hard){
             this.api.clear();
         }
     }
