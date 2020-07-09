@@ -359,7 +359,9 @@ export class ConferenceApi extends EventEmitter{
         if(hard && this.disconnectSubscription){
             this.disconnectSubscription.unsubscribe();
         }
-        this.api.clear();
+        if(hard){
+            this.api.clear();
+        }
     }
     private async closeConnectors():Promise<void>{
         if(this.connectors.size){
