@@ -56,6 +56,9 @@ export declare enum STAT {
     TRAFFIC = "traffic",
     CPU = "cpu"
 }
+export declare enum TELEPHONY {
+    NEXMO = "nexmo"
+}
 export declare enum ERROR {
     UNKNOWN = 500,
     UNAUTHORIZED = 401,
