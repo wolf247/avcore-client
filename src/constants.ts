@@ -45,7 +45,8 @@ export enum ACTION {
     MIXER_REMOVE='mixerRemove',
     MIXER_UPDATE='mixerUpdate',
     MIXER_PIPE_START='mixerPipeStart',
-    MIXER_PIPE_STOP='mixerPipeStop'
+    MIXER_PIPE_STOP='mixerPipeStop',
+    LISTEN_MIXER_STOPPED='listenMixerStopped'
 }
 export enum EVENT {
     STREAM_STARTED='streamStarted',

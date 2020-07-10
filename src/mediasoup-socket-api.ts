@@ -220,6 +220,9 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async mixerPipeStop(json:MixerPipeStopInput):Promise<void>{
         await this.request(ACTION.MIXER_PIPE_STOP,json);
     }
+    async listenMixerStopped(json:MixerInput):Promise<boolean>{
+        return (await this.request(ACTION.LISTEN_MIXER_STOPPED,json) as boolean);
+    }
     clear():void{
         this.client.close();
     }
