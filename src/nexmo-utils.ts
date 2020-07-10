@@ -1,4 +1,4 @@
-import {TELEPHONY} from './constants';
+import {TELEPHONY, TELEPHONY_AUDIO_SAMPLE_RATE} from './constants';
 
 export class NexmoUtils {
     static pinCodeChoice(maxDigits:number,eventUrl:string,text:string="Please, enter active pin code."){
@@ -34,7 +34,7 @@ export class NexmoUtils {
                     {
                         "type": "websocket",
                         "uri": `${url.replace('http','ws')}/${TELEPHONY.NEXMO}`,
-                        "content-type": "audio/l16;rate=16000",
+                        "content-type": `audio/l16;rate=${TELEPHONY_AUDIO_SAMPLE_RATE[TELEPHONY.NEXMO]}`,
                         headers
                     }
                 ]

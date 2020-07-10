@@ -61,6 +61,9 @@ export declare enum STAT {
 export declare enum TELEPHONY {
     NEXMO = "nexmo"
 }
+export declare const TELEPHONY_AUDIO_SAMPLE_RATE: {
+    nexmo: number;
+};
 export declare enum ERROR {
     UNKNOWN = 500,
     UNAUTHORIZED = 401,
