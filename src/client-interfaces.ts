@@ -145,6 +145,7 @@ export interface StreamingOptions extends BitrateOptions{
     width?:number
     height?:number
     frameRate?:number
+    audioSampleRate?:number
 }
 
 export interface KindsByFileInput{
