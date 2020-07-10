@@ -145,6 +145,7 @@ export interface MixerCreateOptions {
     height?:number
     frameRate?:number
     audioSampleRate?:number
+    audioChannels?:number
 }
 export interface StreamingOptions extends BitrateOptions,MixerCreateOptions{
 }
