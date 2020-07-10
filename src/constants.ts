@@ -50,7 +50,8 @@ export enum ACTION {
 }
 export enum EVENT {
     STREAM_STARTED='streamStarted',
-    STREAM_STOPPED='streamStopped'
+    STREAM_STOPPED='streamStopped',
+    MIXER_STOPPED='mixerStopped'
 }
 export enum STAT {
     STATS="stats",
