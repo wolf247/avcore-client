@@ -58,11 +58,10 @@ export declare enum STAT {
     TRAFFIC = "traffic",
     CPU = "cpu"
 }
-export declare enum TELEPHONY {
-    NEXMO = "nexmo"
-}
-export declare const TELEPHONY_AUDIO_SAMPLE_RATE: {
-    nexmo: number;
+export declare const NEXMO: {
+    PATH: string;
+    AUDIO_SAMPLE_RATE: number;
+    AUDIO_CHANNELS: number;
 };
 export declare enum ERROR {
     UNKNOWN = 500,
