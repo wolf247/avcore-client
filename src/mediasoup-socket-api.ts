@@ -43,7 +43,12 @@ import {
     MixerInput,
     MixerAddAudioData,
     MixerAddVideoData,
-    MixerPipeLiveData, MixerPipeInput, MixerPipeRtmpData, MixerPipeRecordingData, MixerPipeStopInput, StreamingOptions
+    MixerPipeLiveData,
+    MixerPipeInput,
+    MixerPipeRtmpData,
+    MixerPipeRecordingData,
+    MixerPipeStopInput,
+    MixerCreateOptions
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi} from './i-mediasoup-api';
@@ -198,7 +203,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async liveStreaming(json:LiveStreamRequest):Promise<void>{
         await this.request(ACTION.LIVE_STREAMING,json);
     }
-    async mixerStart(json:StreamingOptions):Promise<MixerInput>{
+    async mixerStart(json:MixerCreateOptions):Promise<MixerInput>{
         return (await this.request(ACTION.MIXER_START,json) as MixerInput);
     }
     async mixerClose(json:MixerInput):Promise<void>{

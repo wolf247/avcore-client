@@ -137,11 +137,13 @@ export interface LiveStreamRequest extends StreamKindsData, StreamingOptions {
 export interface BitrateOptions {
     videoBitrate?: string;
 }
-export interface StreamingOptions extends BitrateOptions {
+export interface MixerCreateOptions {
     width?: number;
     height?: number;
     frameRate?: number;
     audioSampleRate?: number;
+}
+export interface StreamingOptions extends BitrateOptions, MixerCreateOptions {
 }
 export interface KindsByFileInput {
     filePath: string;
