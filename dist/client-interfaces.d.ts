@@ -53,7 +53,7 @@ export interface PipeFromRemoteProducerRequest extends ProducerData, StreamKindD
 }
 export interface PipeTransportData {
     pipeTransportId: string;
-    ip: TransportListenIp;
+    ip: string;
     port: number;
 }
 export interface PipeTransportConnectData extends PipeTransportData {
