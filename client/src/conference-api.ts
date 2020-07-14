@@ -109,7 +109,7 @@ export class ConferenceApi extends EventEmitter{
             this.configs.kinds=kinds;
             for (const kind of oldKinds){
                 if(!kinds.includes(kind)){
-                   this.unsubscribeTrack(kind)
+                    this.unsubscribeTrack(kind)
                 }
             }
             const promises:Promise<void>[]=[];
@@ -212,7 +212,10 @@ export class ConferenceApi extends EventEmitter{
         const {stream}=this.configs;
         const api:ConferenceApi=this;
         const  rtpCapabilities:RtpCapabilities  = this.device.rtpCapabilities as RtpCapabilities;
-        try{
+        try {
+            if (!this.transport){
+                throw {errorId:ERROR.INVALID_TRANSPORT}
+            }
             const consumeData:ConsumeRequest={ rtpCapabilities,stream,kind,transportId:this.transport.id};
             const data=await this.api.consume(consumeData);
             const layers=this.layers.get(kind);
