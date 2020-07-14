@@ -127,11 +127,27 @@ export class ConferenceApi extends EventEmitter{
         }
         this.operation=operation;
         if(!this.device.loaded){
-            await this.api.initSocket();
+            while (true){
+                try {
+                    await this.api.initSocket();
+                }
+                catch (e) {
+                    continue;
+                }
+                break;
+            }
             this.disconnectSubscription=this.api.client.listen('disconnect').subscribe(async ()=>{
                 console.log('restarting by disconnect');
                 this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
-                await this.api.initSocket();
+                while (true){
+                    try {
+                        await this.api.initSocket();
+                    }
+                    catch (e) {
+                        continue;
+                    }
+                    break;
+                }
                 await this.restartAll();
             });
             const {routerRtpCapabilities,iceServers,simulcast,timeout} = await this.api.getServerConfigs();
