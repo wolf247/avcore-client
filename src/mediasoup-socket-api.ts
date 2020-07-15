@@ -62,6 +62,8 @@ export class MediasoupSocketApi implements IMediasoupApi{
     constructor(url:string,worker:number,token:string,log?:typeof console.log ){
         this.log=log||console.log;
         this.client = io(url, {
+            path:"",
+            transports:['websocket'],
             transportOptions: {
                 polling: {
                     extraHeaders: {
