@@ -57,11 +57,12 @@ export class ConferenceApi extends EventEmitter{
         this.log=debug(`conference-api [${this.configs.stream}]:`);
         this.createClient();
         this.device = new Device();
+        const api:ConferenceApi=this;
         this.onClientDisconnect=async ():Promise<void>=>{
             console.log('restarting by disconnect');
-            this.destroyClient();
-            this.createClient();
-            await this.restartAll();
+            api.destroyClient();
+            api.createClient();
+            await api.restartAll();
         }
     }
     async setPreferredLayers(layers:ConsumerLayers):Promise<void>{
