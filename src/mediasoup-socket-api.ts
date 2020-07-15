@@ -63,14 +63,9 @@ export class MediasoupSocketApi implements IMediasoupApi{
         this.log=log||console.log;
         this.client = io(url, {
             path:"",
-            //transports:['websocket'],
+            transports:['websocket'],
             query: `auth_token=${token}&mediasoup_worker=${worker}`,
-            forceNew: true,
-            transportOptions: {
-                polling: {
-                    extraHeaders: { Authorization: `Bearer ${token}`, mediasoup_worker:worker }
-                }
-            }
+            forceNew: true
         }) as ApiSocket;
     }
     private connectSocket(): Promise<void> {
