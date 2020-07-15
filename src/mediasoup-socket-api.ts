@@ -1,3 +1,4 @@
+import io from 'socket.io-client';
 import {ACTION} from './constants';
 import {
     ConnectTransportRequest,
@@ -51,36 +52,37 @@ import {
     MixerCreateOptions
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
-import {IMediasoupApi} from './i-mediasoup-api';
-import { RxSocketClient } from 'rx-socket-io.client';
-import { map } from 'rxjs/operators';
-
+import {IMediasoupApi, IMediasoupApiClient} from './i-mediasoup-api';
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+export interface ApiSocket extends Omit< SocketIOClient.Socket, "on">,IMediasoupApiClient{
+}
 export class MediasoupSocketApi implements IMediasoupApi{
-    // private readonly url:string;
-    // private readonly token:string;
     private readonly log:typeof console.log;
-    readonly client: RxSocketClient;
+    readonly client: ApiSocket;
     constructor(url:string,worker:number,token:string,log?:typeof console.log ){
-        // this.url=url;
-        // this.token=token;
         this.log=log||console.log;
-
-        this.client = new RxSocketClient(
-            url,
-            {
-                query: `auth_token=${token}&mediasoup_worker=${worker}`,
-                transports: ['websocket'],
-                forceNew: true,
-                path: ''
+        this.client = io(url, {
+            transportOptions: {
+                polling: {
+                    extraHeaders: {
+                        'x-auth-token': token
+                    }
+                },
+                websocket: {
+                    query: `auth_token=${token}&mediasoup_worker=${worker}`,
+                }
             }
-        );
+        }) as ApiSocket;
     }
-    initSocket(): Promise<void> {
-        return this.client.init()
-            .pipe(map(() => {
-                return undefined
-            }))
-            .toPromise();
+    private connectSocket(): Promise<void> {
+        return new Promise(resolve => {
+            if(this.client.connected){
+                resolve();
+            }
+            else {
+                this.client.on('connect', resolve)
+            }
+        });
     }
     async resumeConsumer(json:ConsumerData):Promise<void>{
         await this.request(ACTION.RESUME_CONSUMER, json);
@@ -220,7 +222,6 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     async mixerPipeStart(json:MixerPipeLiveData|MixerPipeRecordingData|MixerPipeRtmpData):Promise<MixerPipeInput>{
         return (await this.request(ACTION.MIXER_PIPE_START,json) as MixerPipeInput);
-
     }
     async mixerPipeStop(json:MixerPipeStopInput):Promise<void>{
         await this.request(ACTION.MIXER_PIPE_STOP,json);
@@ -232,16 +233,18 @@ export class MediasoupSocketApi implements IMediasoupApi{
         this.client.close();
     }
     private async request(action,json={}):Promise<object|boolean>{
+        await this.connectSocket();
         this.log('sent message', action, JSON.stringify(json));
-        const data = await this.client.emit<object>(action, json).toPromise();
-        if(data && data.hasOwnProperty('errorId')){
-            this.log('got error',  action, JSON.stringify(data));
-            throw data;
-        }
-        else {
-            this.log('got message',  action, JSON.stringify(data));
-        }
-        return data;
-
+        return new Promise((resolve,reject) => {
+            this.client.emit(action,json,(data:object|boolean)=>{
+                if(data && typeof data!=='boolean' && data.hasOwnProperty('errorId')){
+                    this.log('got error',  action, JSON.stringify(data));
+                    reject(data);
+                }
+                else {
+                    resolve(data)
+                }
+            })
+        });
     }
 }

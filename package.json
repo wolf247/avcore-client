@@ -7,6 +7,7 @@
   "author": "Codeda",
   "license": "ISC",
   "devDependencies": {
+    "@types/socket.io-client": "^1.4.33",
     "clean-webpack-plugin": "^3.0.0",
     "terser-webpack-plugin": "^3.0.5",
     "ts-loader": "^7.0.5",
@@ -17,8 +18,6 @@
   },
   "dependencies": {
     "mediasoup-client": "^3.6.5",
-    "rx-socket-io.client": "https://github.com/looffee/rx-socket.io-client.git",
-    "rxjs": "^6.5.5",
     "socket.io-client": "^2.3.0"
   },
   "scripts": {

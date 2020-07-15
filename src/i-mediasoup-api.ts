@@ -51,9 +51,13 @@ import {
     MixerPipeStopInput,
     MixerCreateOptions
 } from './client-interfaces';
-import {Observable} from 'rxjs/index';
 export interface IMediasoupApiClient {
-    listen<T>(event: EVENT): Observable<T>;
+    on(event: 'error', listener: (error) => void): this
+    on(event: 'connect', listener: (data) => void): this
+    on(event: 'disconnect', listener: (data) => void): this
+    on(event: EVENT.STREAM_STARTED, listener: (json:StreamKindData) => void): this
+    on(event: EVENT.STREAM_STOPPED, listener: (json:StreamKindData) => void): this
+    on(event: EVENT.MIXER_STOPPED, listener: (json:MixerInput) => void): this
 }
 export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void>>{
     readonly client:IMediasoupApiClient;

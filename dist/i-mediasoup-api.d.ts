@@ -1,9 +1,13 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION, EVENT } from './constants';
 import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData, KindsByFileInput, KindsOptionsData, PushStreamOptionsResponse, PushStreamOptionsRequest, PushStreamRequest, LiveStreamRequest, StreamKindData, StreamListenData, MixerInput, MixerAddAudioData, MixerAddVideoData, MixerUpdateData, MixerRemoveData, MixerPipeLiveData, MixerPipeRecordingData, MixerPipeRtmpData, MixerPipeInput, MixerPipeStopInput, MixerCreateOptions } from './client-interfaces';
-import { Observable } from 'rxjs/index';
 export interface IMediasoupApiClient {
-    listen<T>(event: EVENT): Observable<T>;
+    on(event: 'error', listener: (error: any) => void): this;
+    on(event: 'connect', listener: (data: any) => void): this;
+    on(event: 'disconnect', listener: (data: any) => void): this;
+    on(event: EVENT.STREAM_STARTED, listener: (json: StreamKindData) => void): this;
+    on(event: EVENT.STREAM_STOPPED, listener: (json: StreamKindData) => void): this;
+    on(event: EVENT.MIXER_STOPPED, listener: (json: MixerInput) => void): this;
 }
 export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} | void>> {
     readonly client: IMediasoupApiClient;

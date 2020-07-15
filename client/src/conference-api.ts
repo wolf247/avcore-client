@@ -17,8 +17,6 @@ import {
     IceSever,
     Simulcast
 } from 'avcore';
-import {SubscriptionLike} from 'rxjs/internal/types';
-
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({bitRate:number,kind:MediaKind}) => void): this
     on(event: 'connectionstatechange', listener: ({state:string}) => void): this
@@ -41,7 +39,6 @@ export class ConferenceApi extends EventEmitter{
     private transportTimeout:ReturnType<typeof setTimeout>;
     private iceServers:IceSever[]|undefined;
     private simulcast:Simulcast|undefined;
-    private disconnectSubscription:SubscriptionLike|undefined;
     constructor(configs:ConferenceInput){
         super();
         this.configs={
@@ -56,7 +53,7 @@ export class ConferenceApi extends EventEmitter{
             ...configs
         };
         this.log=debug(`conference-api [${this.configs.stream}]:`);
-        this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
+        this.createClient();
         this.device = new Device();
     }
     async setPreferredLayers(layers:ConsumerLayers):Promise<void>{
@@ -121,35 +118,31 @@ export class ConferenceApi extends EventEmitter{
             await Promise.all(promises);
         }
     }
+    private async onClientDisconnect(){
+        console.log('restarting by disconnect');
+        this.destroyClient();
+        this.createClient();
+        await this.restartAll();
+    }
+    private destroyClient(){
+        if(this.api){
+            this.api.client.off('disconnect',this.onClientDisconnect);
+            this.api.client.off('error',this.onClientDisconnect);
+            this.api.clear();
+        }
+
+    }
+    private createClient(){
+        this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
+        this.api.client.on('disconnect',this.onClientDisconnect);
+        this.api.client.on('error',this.onClientDisconnect);
+    }
     private async init(operation:API_OPERATION):Promise<void>{
         if(this.operation){
             throw new Error("Already processing")
         }
         this.operation=operation;
         if(!this.device.loaded){
-            while (true){
-                try {
-                    await this.api.initSocket();
-                }
-                catch (e) {
-                    continue;
-                }
-                break;
-            }
-            this.disconnectSubscription=this.api.client.listen('disconnect').subscribe(async ()=>{
-                console.log('restarting by disconnect');
-                this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
-                while (true){
-                    try {
-                        await this.api.initSocket();
-                    }
-                    catch (e) {
-                        continue;
-                    }
-                    break;
-                }
-                await this.restartAll();
-            });
             const {routerRtpCapabilities,iceServers,simulcast,timeout} = await this.api.getServerConfigs();
             if (routerRtpCapabilities.headerExtensions)
             {
@@ -177,16 +170,14 @@ export class ConferenceApi extends EventEmitter{
         this.mediaStream=mediaStream;
         const {stream}=this.configs;
         const promises:Promise<boolean>[]=[];
-        this.api.client.listen(EVENT.STREAM_STARTED)
-            .subscribe(async ({stream,kind})=>{
+        this.api.client.on(EVENT.STREAM_STARTED,async ({stream,kind})=>{
                 this.unsubscribeTrack(kind);
                 console.log('on stream started',kind);
                 if(this.configs.kinds.includes(kind)){
                     await this.subscribeTrack(kind);
                 }
             });
-        this.api.client.listen(EVENT.STREAM_STOPPED)
-            .subscribe(async ({stream,kind})=>{
+        this.api.client.on(EVENT.STREAM_STOPPED,async ({stream,kind})=>{
                 console.log('on stream stopped',kind);
                 this.unsubscribeTrack(kind);
             });
@@ -375,9 +366,8 @@ export class ConferenceApi extends EventEmitter{
         }
         await this.closeConnectors();
         delete this.operation;
-        if(hard && this.disconnectSubscription){
-            this.disconnectSubscription.unsubscribe();
-            this.api.clear();
+        if(hard && this.api){
+            this.destroyClient();
         }
     }
     private async closeConnectors():Promise<void>{
