@@ -49,11 +49,11 @@ import {
     MixerPipeRtmpData,
     MixerPipeRecordingData,
     MixerPipeStopInput,
-    MixerCreateOptions
+    MixerCreateOptions,
+    Omit
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi, IMediasoupApiClient} from './i-mediasoup-api';
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export interface ApiSocket extends Omit< SocketIOClient.Socket, "on">,IMediasoupApiClient{
 }
 export class MediasoupSocketApi implements IMediasoupApi{

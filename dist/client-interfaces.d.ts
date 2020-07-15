@@ -2,6 +2,7 @@ import { MediaKind, RtpCapabilities, RtpEncodingParameters, RtpParameters } from
 import { ProducerCodecOptions } from 'mediasoup-client/lib/Producer';
 import { DtlsParameters } from 'mediasoup-client/lib/Transport';
 import { MIXER_PIPE_TYPE } from './constants';
+export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export interface ConsumerData {
     consumerId: string;
 }
