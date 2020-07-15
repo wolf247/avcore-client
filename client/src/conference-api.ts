@@ -39,6 +39,8 @@ export class ConferenceApi extends EventEmitter{
     private transportTimeout:ReturnType<typeof setTimeout>;
     private iceServers:IceSever[]|undefined;
     private simulcast:Simulcast|undefined;
+    private readonly onClientDisconnect:()=>Promise<void>;
+
     constructor(configs:ConferenceInput){
         super();
         this.configs={
@@ -55,6 +57,12 @@ export class ConferenceApi extends EventEmitter{
         this.log=debug(`conference-api [${this.configs.stream}]:`);
         this.createClient();
         this.device = new Device();
+        this.onClientDisconnect=async ():Promise<void>=>{
+            console.log('restarting by disconnect');
+            this.destroyClient();
+            this.createClient();
+            await this.restartAll();
+        }
     }
     async setPreferredLayers(layers:ConsumerLayers):Promise<void>{
         if(this.operation===API_OPERATION.SUBSCRIBE){
@@ -118,12 +126,6 @@ export class ConferenceApi extends EventEmitter{
             await Promise.all(promises);
         }
     }
-    private async onClientDisconnect(){
-        console.log('restarting by disconnect');
-        this.destroyClient();
-        this.createClient();
-        await this.restartAll();
-    }
     private destroyClient(){
         if(this.api){
             this.api.client.off('disconnect',this.onClientDisconnect);
@@ -132,6 +134,7 @@ export class ConferenceApi extends EventEmitter{
         }
 
     }
+
     private createClient(){
         this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
         this.api.client.on('disconnect',this.onClientDisconnect);
