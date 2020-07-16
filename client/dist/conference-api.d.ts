@@ -44,7 +44,7 @@ export declare class ConferenceApi extends EventEmitter {
     removeTrack(track: MediaStreamTrack): Promise<void>;
     setMaxPublisherBitrate(bitrate: number): Promise<void>;
     updateKinds(kinds: MediaKind[]): Promise<void>;
-    private static destroyClient;
+    private destroyClient;
     private createClient;
     private init;
     publish(mediaStream: MediaStream): Promise<MediaStream>;

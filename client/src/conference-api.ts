@@ -60,7 +60,7 @@ export class ConferenceApi extends EventEmitter{
         const api:ConferenceApi=this;
         this.onClientDisconnect=async ():Promise<void>=>{
             console.log('restarting by disconnect');
-            ConferenceApi.destroyClient(api);
+            api.destroyClient();
             api.createClient();
             await api.restartAll();
         }
@@ -127,11 +127,15 @@ export class ConferenceApi extends EventEmitter{
             await Promise.all(promises);
         }
     }
-    private static destroyClient(api:ConferenceApi){
-        if(api.api){
-            api.api.client.off('disconnect',api.onClientDisconnect);
-            api.api.client.off('error',api.onClientDisconnect);
-            api.api.clear();
+    private destroyClient(){
+        if(this.api){
+            if(this.api.client.hasListeners('disconnect')){
+                this.api.client.removeListener('disconnect',this.onClientDisconnect);
+            }
+            if(this.api.client.hasListeners('error')){
+                this.api.client.removeListener('error',this.onClientDisconnect);
+            }
+            this.api.clear();
         }
 
     }
@@ -351,28 +355,27 @@ export class ConferenceApi extends EventEmitter{
         getStats();
     }
     async close(hard=true){
-        const api=this;
-        if(api.transport){
-            if(!api.transport.closed){
-                api.transport.close();
+        if(this.transport){
+            if(!this.transport.closed){
+                this.transport.close();
             }
-            const transportId=api.transport.id;
-            delete api.transport;
+            const transportId=this.transport.id;
+            delete this.transport;
             try {
-                await api.api.closeTransport({transportId});
+                await this.api.closeTransport({transportId});
             }
             catch (e) {}
-            api.emit('connectionstatechange',{state:'disconnected'});
+            this.emit('connectionstatechange',{state:'disconnected'});
         }
-        if((hard || api.operation===API_OPERATION.SUBSCRIBE) && api.mediaStream && api.configs.stopTracks){
-            api.mediaStream.getTracks().forEach(function(track) {
+        if((hard || this.operation===API_OPERATION.SUBSCRIBE) && this.mediaStream && this.configs.stopTracks){
+            this.mediaStream.getTracks().forEach(function(track) {
                 track.stop();
             });
         }
-        await api.closeConnectors();
-        delete api.operation;
-        if(hard){
-            ConferenceApi.destroyClient(api);
+        await this.closeConnectors();
+        delete this.operation;
+        if(hard && this.api){
+            this.destroyClient();
         }
     }
     private async closeConnectors():Promise<void>{
