@@ -375,7 +375,7 @@ export class ConferenceApi extends EventEmitter{
         await this.closeConnectors();
         delete this.operation;
         if(hard && this.api){
-            this.destroyClient();
+            this.api.clear();
         }
     }
     private async closeConnectors():Promise<void>{
