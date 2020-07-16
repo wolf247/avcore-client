@@ -60,7 +60,7 @@ export class ConferenceApi extends EventEmitter{
         const api:ConferenceApi=this;
         this.onClientDisconnect=async ():Promise<void>=>{
             console.log('restarting by disconnect');
-            api.destroyClient();
+            ConferenceApi.destroyClient(api);
             api.createClient();
             await api.restartAll();
         }
@@ -127,11 +127,11 @@ export class ConferenceApi extends EventEmitter{
             await Promise.all(promises);
         }
     }
-    private destroyClient(){
-        if(this.api){
-            this.api.client.off('disconnect',this.onClientDisconnect);
-            this.api.client.off('error',this.onClientDisconnect);
-            this.api.clear();
+    private static destroyClient(api:ConferenceApi){
+        if(api.api){
+            api.api.client.off('disconnect',api.onClientDisconnect);
+            api.api.client.off('error',api.onClientDisconnect);
+            api.api.clear();
         }
 
     }
@@ -351,27 +351,28 @@ export class ConferenceApi extends EventEmitter{
         getStats();
     }
     async close(hard=true){
-        if(this.transport){
-            if(!this.transport.closed){
-                this.transport.close();
+        const api=this;
+        if(api.transport){
+            if(!api.transport.closed){
+                api.transport.close();
             }
-            const transportId=this.transport.id;
-            delete this.transport;
+            const transportId=api.transport.id;
+            delete api.transport;
             try {
-                await this.api.closeTransport({transportId});
+                await api.api.closeTransport({transportId});
             }
             catch (e) {}
-            this.emit('connectionstatechange',{state:'disconnected'});
+            api.emit('connectionstatechange',{state:'disconnected'});
         }
-        if((hard || this.operation===API_OPERATION.SUBSCRIBE) && this.mediaStream && this.configs.stopTracks){
-            this.mediaStream.getTracks().forEach(function(track) {
+        if((hard || api.operation===API_OPERATION.SUBSCRIBE) && api.mediaStream && api.configs.stopTracks){
+            api.mediaStream.getTracks().forEach(function(track) {
                 track.stop();
             });
         }
-        await this.closeConnectors();
-        delete this.operation;
-        if(hard && this.api){
-            this.destroyClient();
+        await api.closeConnectors();
+        delete api.operation;
+        if(hard){
+            ConferenceApi.destroyClient(api);
         }
     }
     private async closeConnectors():Promise<void>{
