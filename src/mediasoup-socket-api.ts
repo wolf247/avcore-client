@@ -59,6 +59,7 @@ export interface ApiSocket extends Omit< SocketIOClient.Socket, "on">,IMediasoup
 export class MediasoupSocketApi implements IMediasoupApi{
     private readonly log:typeof console.log;
     readonly client: ApiSocket;
+    private closed=false;
     constructor(url:string,worker:number,token:string,log?:typeof console.log ){
         this.log=log||console.log;
         this.client = io(url, {
@@ -224,21 +225,25 @@ export class MediasoupSocketApi implements IMediasoupApi{
         return (await this.request(ACTION.LISTEN_MIXER_STOPPED,json) as boolean);
     }
     clear():void{
+        this.closed=true;
         this.client.disconnect();
     }
-    private async request(action,json={}):Promise<object|boolean>{
-        await this.connectSocket();
-        this.log('sent message', action, JSON.stringify(json));
-        return new Promise((resolve,reject) => {
-            this.client.emit(action,json,(data:object|boolean)=>{
-                if(data && typeof data!=='boolean' && data.hasOwnProperty('errorId')){
-                    this.log('got error',  action, JSON.stringify(data));
-                    reject(data);
-                }
-                else {
-                    resolve(data)
-                }
-            })
-        });
+    private async request(action,json={}):Promise<object|boolean|void>{
+        if(!this.closed){
+            await this.connectSocket();
+            this.log('sent message', action, JSON.stringify(json));
+            return new Promise((resolve,reject) => {
+                this.client.emit(action,json,(data:object|boolean)=>{
+                    if(data && typeof data!=='boolean' && data.hasOwnProperty('errorId')){
+                        this.log('got error',  action, JSON.stringify(data));
+                        reject(data);
+                    }
+                    else {
+                        resolve(data)
+                    }
+                })
+            });
+        }
+
     }
 }

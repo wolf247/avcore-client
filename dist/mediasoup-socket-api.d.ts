@@ -7,6 +7,7 @@ export interface ApiSocket extends Omit<SocketIOClient.Socket, "on">, IMediasoup
 export declare class MediasoupSocketApi implements IMediasoupApi {
     private readonly log;
     readonly client: ApiSocket;
+    private closed;
     constructor(url: string, worker: number, token: string, log?: typeof console.log);
     private connectSocket;
     resumeConsumer(json: ConsumerData): Promise<void>;
