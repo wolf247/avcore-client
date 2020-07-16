@@ -224,7 +224,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
         return (await this.request(ACTION.LISTEN_MIXER_STOPPED,json) as boolean);
     }
     clear():void{
-        this.client.close();
+        this.client.disconnect();
     }
     private async request(action,json={}):Promise<object|boolean>{
         await this.connectSocket();
