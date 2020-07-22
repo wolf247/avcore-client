@@ -1,3 +1,6 @@
+import {HLS} from '../../src/constants';
+import {join} from 'path';
+
 interface MediaDevicesExtended extends MediaDevices{
     getDisplayMedia:(constraints:MediaStreamConstraints)=>Promise<MediaStream>
 }
@@ -13,5 +16,7 @@ export class Utils{
     static isOpera = !!(window as any).opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     static isChrome = !!(window as any).chrome && ! Utils.isOpera;
     static isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
+    static hlsPlaylistPath(pipeId:string):string{
+        return join(HLS.ROOT,pipeId,HLS.PLAYLIST);
+    }
 }

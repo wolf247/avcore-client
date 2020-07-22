@@ -50,7 +50,7 @@ import {
     MixerPipeRecordingData,
     MixerPipeStopInput,
     MixerCreateOptions,
-    Omit
+    Omit, MixerPipeHlsData
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi, IMediasoupApiClient} from './i-mediasoup-api';
@@ -215,7 +215,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async mixerRemove(json:MixerRemoveData):Promise<void>{
         await this.request(ACTION.MIXER_REMOVE,json);
     }
-    async mixerPipeStart(json:MixerPipeLiveData|MixerPipeRecordingData|MixerPipeRtmpData):Promise<MixerPipeInput>{
+    async mixerPipeStart(json:MixerPipeLiveData|MixerPipeRecordingData|MixerPipeRtmpData|MixerPipeHlsData):Promise<MixerPipeInput>{
         return (await this.request(ACTION.MIXER_PIPE_START,json) as MixerPipeInput);
     }
     async mixerPipeStop(json:MixerPipeStopInput):Promise<void>{

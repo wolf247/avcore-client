@@ -58,6 +58,10 @@ export declare enum STAT {
     TRAFFIC = "traffic",
     CPU = "cpu"
 }
+export declare const HLS: {
+    ROOT: string;
+    PLAYLIST: string;
+};
 export declare const NEXMO: {
     PATH: string;
     AUDIO_SAMPLE_RATE: number;
@@ -84,5 +88,6 @@ export declare enum API_OPERATION {
 export declare enum MIXER_PIPE_TYPE {
     LIVE = 0,
     RECORDING = 1,
-    RTMP = 2
+    RTMP = 2,
+    HLS = 3
 }

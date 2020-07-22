@@ -257,6 +257,9 @@ export interface MixerPipeLiveData extends MixerPipeData,StreamData{
 export interface MixerPipeRecordingData extends MixerPipeData{
     type:MIXER_PIPE_TYPE.RECORDING
 }
+export interface MixerPipeHlsData extends MixerPipeData{
+    type:MIXER_PIPE_TYPE.HLS
+}
 export interface MixerPipeRtmpData extends MixerPipeData{
     type:MIXER_PIPE_TYPE.RTMP
     url:string
