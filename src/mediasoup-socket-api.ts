@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import {ACTION} from './constants';
+import {ACTION, ERROR} from './constants';
 import {
     ConnectTransportRequest,
     ConsumerData,
@@ -75,7 +75,15 @@ export class MediasoupSocketApi implements IMediasoupApi{
                 resolve();
             }
             else {
-                this.client.on('error', reject);
+                this.client.on('error', (e)=>{
+                    if(e.message==='Not enough or too many segments'){
+                        e.errorId=ERROR.UNAUTHORIZED;
+                    }
+                    else {
+                        e.errorId=ERROR.UNKNOWN;
+                    }
+                    reject(e);
+                });
                 this.client.on('connect', resolve)
             }
         });
