@@ -70,11 +70,12 @@ export class MediasoupSocketApi implements IMediasoupApi{
         }) as ApiSocket;
     }
     private connectSocket(): Promise<void> {
-        return new Promise(resolve => {
+        return new Promise((resolve,reject) => {
             if(this.client.connected){
                 resolve();
             }
             else {
+                this.client.on('error', reject);
                 this.client.on('connect', resolve)
             }
         });
