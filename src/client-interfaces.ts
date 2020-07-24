@@ -252,7 +252,7 @@ export interface MixerRemoveData extends MixerInput,StreamKindData{
 export interface MixerPipeData extends MixerInput,KindsData,BitrateOptions {
 }
 export interface MixerHlsFormatOptions extends SizeData{
-    videoBitrate: string
+    videoBitrate: number
 }
 export interface MixerPipeLiveData extends MixerPipeData,StreamData{
     type:MIXER_PIPE_TYPE.LIVE
