@@ -247,8 +247,10 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     clear():void{
         this.closed=true;
-        this.client.removeAllListeners();
-        this.client.disconnect();
+        if(this._client){
+            this._client.removeAllListeners();
+            this._client.disconnect();
+        }
     }
     private async request(action:ACTION,json={}):Promise<object|boolean|void>{
         if(!this.closed){
