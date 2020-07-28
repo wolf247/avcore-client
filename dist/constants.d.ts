@@ -81,7 +81,8 @@ export declare enum ERROR {
     INVALID_STREAM = 533,
     INVALID_OPERATION = 534,
     INVALID_WORKER = 535,
-    INVALID_INPUT = 536
+    INVALID_INPUT = 536,
+    INVALID_ACTION = 537
 }
 export declare enum API_OPERATION {
     SUBSCRIBE = 0,
