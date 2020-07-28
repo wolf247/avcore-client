@@ -273,6 +273,7 @@ export class MediasoupSocketApi implements IMediasoupApi{
                     reject(data);
                 }
                 else {
+                    this.log('got message',  action, JSON.stringify(data));
                     resolve(data)
                 }
             })
