@@ -42,11 +42,11 @@ module.exports = env => {
                 amd: 'socket.io-client',
             },
             'axios': {
-                root: 'default',
-                commonjs: 'axios',
+                root: 'axios',
                 commonjs2: 'axios',
-                amd: 'axios',
-            },
+                commonjs: 'axios',
+                amd: 'axios'
+            }
         },
     };
 };
