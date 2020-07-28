@@ -263,8 +263,8 @@ export interface MixerPipeRecordingData extends MixerPipeData{
 export interface MixerPipeHlsData extends MixerPipeData{
     type:MIXER_PIPE_TYPE.HLS
     formats:MixerHlsFormatOptions[]
-    numChunks:number
-    chunkDuration:number
+    numChunks?:number
+    chunkDuration?:number
 }
 export interface MixerPipeRtmpData extends MixerPipeData{
     type:MIXER_PIPE_TYPE.RTMP
