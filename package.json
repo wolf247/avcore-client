@@ -17,6 +17,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "mediasoup-client": "^3.6.5",
     "socket.io-client": "^2.3.0"
   },

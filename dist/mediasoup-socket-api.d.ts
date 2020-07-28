@@ -6,9 +6,13 @@ export interface ApiSocket extends Omit<SocketIOClient.Socket, "on">, IMediasoup
 }
 export declare class MediasoupSocketApi implements IMediasoupApi {
     private readonly log;
-    readonly client: ApiSocket;
+    private _client;
+    private readonly url;
+    private readonly worker;
+    private readonly token;
     private closed;
     constructor(url: string, worker: number, token: string, log?: typeof console.log);
+    get client(): ApiSocket;
     private connectSocket;
     resumeConsumer(json: ConsumerData): Promise<void>;
     pauseConsumer(json: ConsumerData): Promise<void>;
@@ -60,4 +64,6 @@ export declare class MediasoupSocketApi implements IMediasoupApi {
     listenMixerStopped(json: MixerInput): Promise<boolean>;
     clear(): void;
     private request;
+    private socketRequest;
+    private restRequest;
 }

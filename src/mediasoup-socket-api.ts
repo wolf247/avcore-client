@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
-import {ACTION, ERROR} from './constants';
+import {default as axios} from 'axios';
+import {ACTION, ERROR, PATH, SOCKET_ONLY_ACTIONS} from './constants';
 import {
     ConnectTransportRequest,
     ConsumerData,
@@ -58,16 +59,27 @@ export interface ApiSocket extends Omit< SocketIOClient.Socket, "on">,IMediasoup
 }
 export class MediasoupSocketApi implements IMediasoupApi{
     private readonly log:typeof console.log;
-    readonly client: ApiSocket;
+    private _client: ApiSocket;
+    private readonly url: string;
+    private readonly worker: number;
+    private readonly token: string;
     private closed=false;
     constructor(url:string,worker:number,token:string,log?:typeof console.log ){
         this.log=log||console.log;
-        this.client = io(url, {
-            path:"",
-            transports:['websocket'],
-            query: `auth_token=${token}&mediasoup_worker=${worker}`,
-            forceNew: true
-        }) as ApiSocket;
+        this.url=url;
+        this.worker=worker;
+        this.token=token;
+    }
+    get client():ApiSocket{
+        if(!this._client){
+            this._client = io(this.url, {
+                path:"",
+                transports:['websocket'],
+                query: `auth_token=${this.token}&mediasoup_worker=${this.worker}`,
+                forceNew: true
+            }) as ApiSocket;
+        }
+        return this._client;
     }
     private connectSocket(): Promise<void> {
         return new Promise((resolve,reject) => {
@@ -238,21 +250,48 @@ export class MediasoupSocketApi implements IMediasoupApi{
         this.client.removeAllListeners();
         this.client.disconnect();
     }
-    private async request(action,json={}):Promise<object|boolean|void>{
+    private async request(action:ACTION,json={}):Promise<object|boolean|void>{
         if(!this.closed){
-            await this.connectSocket();
-            this.log('sent message', action, JSON.stringify(json));
-            return new Promise((resolve,reject) => {
-                this.client.emit(action,json,(data:object|boolean)=>{
-                    if(data && typeof data!=='boolean' && data.hasOwnProperty('errorId')){
-                        this.log('got error',  action, JSON.stringify(data));
-                        reject(data);
-                    }
-                    else {
-                        resolve(data)
-                    }
-                })
+            if(!this._client && !SOCKET_ONLY_ACTIONS.includes(action)){
+                return this.restRequest(action,json)
+            }
+            else {
+                return this.socketRequest(action,json)
+            }
+        }
+
+    }
+    private async socketRequest(action:ACTION,json={}):Promise<object|boolean>{
+        await this.connectSocket();
+        this.log('sent message', action, JSON.stringify(json));
+        return new Promise((resolve,reject) => {
+            this.client.emit(action,json,(data:object|boolean)=>{
+                if(data && typeof data!=='boolean' && data.hasOwnProperty('errorId')){
+                    this.log('got error',  action, JSON.stringify(data));
+                    reject(data);
+                }
+                else {
+                    resolve(data)
+                }
+            })
+        });
+
+    }
+    private async restRequest(action:ACTION,json={}):Promise<object|boolean>{
+        try {
+            const {data} =  await axios.post(`${this.url}/${PATH.API}/${this.worker}/${action}`,json,{
+                headers: { 'Content-Type': 'application/json', "Authorization":`Bearer ${this.token}` },
             });
+            this.log('got message',  action, JSON.stringify(data));
+            return data;
+        }
+        catch (e) {
+            let errorId:ERROR=ERROR.UNKNOWN;
+            this.log('got error',e);
+            if(e.response && e.response.status && ERROR[e.response.status]){
+                errorId=e.response.status
+            }
+            throw {errorId};
         }
 
     }

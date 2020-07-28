@@ -48,6 +48,8 @@ export declare enum ACTION {
     MIXER_PIPE_STOP = "mixerPipeStop",
     LISTEN_MIXER_STOPPED = "listenMixerStopped"
 }
+export declare const SOCKET_ONLY_ACTIONS: ACTION[];
+export declare const REST_ACTIONS: ACTION[];
 export declare enum EVENT {
     STREAM_STARTED = "streamStarted",
     STREAM_STOPPED = "streamStopped",
@@ -62,6 +64,9 @@ export declare const HLS: {
     ROOT: string;
     PLAYLIST: string;
 };
+export declare enum PATH {
+    API = "api"
+}
 export declare const NEXMO: {
     PATH: string;
     AUDIO_SAMPLE_RATE: number;
