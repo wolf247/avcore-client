@@ -260,11 +260,14 @@ export interface MixerPipeLiveData extends MixerPipeData,StreamData{
 export interface MixerPipeRecordingData extends MixerPipeData{
     type:MIXER_PIPE_TYPE.RECORDING
 }
-export interface MixerPipeHlsData extends MixerPipeData{
-    type:MIXER_PIPE_TYPE.HLS
-    formats:MixerHlsFormatOptions[]
+export interface HlsData{
+    formats?:MixerHlsFormatOptions[]
     numChunks?:number
     chunkDuration?:number
+}
+export interface MixerPipeHlsData extends MixerPipeData,HlsData{
+    type:MIXER_PIPE_TYPE.HLS
+    formats:MixerHlsFormatOptions[]
 }
 export interface MixerPipeRtmpData extends MixerPipeData{
     type:MIXER_PIPE_TYPE.RTMP
@@ -274,4 +277,8 @@ export interface MixerPipeInput{
     pipeId:string
 }
 export interface MixerPipeStopInput extends MixerPipeInput,MixerInput{
+}
+export interface LiveToHlsRequest extends StreamKindsData,StreamingOptions,HlsData{
+    url:string
+    restartOnExit?:boolean
 }
