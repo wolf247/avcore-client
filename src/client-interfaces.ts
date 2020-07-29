@@ -278,7 +278,7 @@ export interface MixerPipeInput{
 }
 export interface MixerPipeStopInput extends MixerPipeInput,MixerInput{
 }
-export interface LiveToHlsRequest extends StreamKindsData,StreamingOptions,HlsData{
+export interface LiveToHlsRequest extends StreamKindsData,HlsData{
     url:string
     restartOnExit?:boolean
 }
