@@ -174,6 +174,7 @@ export interface PortData {
 }
 export interface PushStreamOptionsRequest extends PullStreamInputsRequest{
     bindPorts?:boolean
+    simulcast?:SizeData[]
 }
 export interface PushStreamRequest extends StreamKindsData{
     options:string[]
