@@ -192,7 +192,6 @@ export class ConferenceApi extends EventEmitter{
         let origin;
         if(this.configs.origin && (this.configs.url!==this.configs.origin.url || this.configs.worker!==this.configs.origin.worker)){
             const {token,worker,url}=this.configs;
-            console.log('NOT SAME ORIGIN',this.configs);
             origin={
                 target: {url, worker, token},
                 source: {
