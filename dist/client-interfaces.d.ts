@@ -164,7 +164,7 @@ export interface PushStreamOptionsResponse {
 }
 export interface PortData {
     payloadType: number;
-    ssrc: number;
+    ssrcs: number[];
     rtpPort: number;
     rtcpPort: number;
     bindRtpPort?: number;
