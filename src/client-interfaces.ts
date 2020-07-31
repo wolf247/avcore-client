@@ -131,11 +131,11 @@ export interface StreamListenData extends StreamKindData{
 export interface StreamData {
     stream:string
 }
-export interface StreamFileRequest extends StreamKindsData,KindsByFileInput,StreamingOptions{
+export interface StreamFileRequest extends StreamKindsData,KindsByFileInput,StreamingOptions,PushSimulcastInput{
     restartOnExit?:boolean
     additionalInputOptions?:string[]
 }
-export interface LiveStreamRequest extends StreamKindsData,StreamingOptions{
+export interface LiveStreamRequest extends StreamKindsData,StreamingOptions,PushSimulcastInput{
     url:string
     restartOnExit?:boolean
 }
@@ -172,9 +172,11 @@ export interface PortData {
     bindRtpPort?:number
     bindRtcpPort?:number
 }
-export interface PushStreamOptionsRequest extends PullStreamInputsRequest{
-    bindPorts?:boolean
+export interface PushSimulcastInput {
     simulcast?:SizeData[]
+}
+export interface PushStreamOptionsRequest extends PullStreamInputsRequest,PushSimulcastInput{
+    bindPorts?:boolean
 }
 export interface PushStreamRequest extends StreamKindsData{
     options:string[]
@@ -255,8 +257,9 @@ export interface MixerPipeData extends MixerInput,KindsData {
 export interface MixerHlsFormatOptions extends SizeData{
     videoBitrate: number
 }
-export interface MixerPipeLiveData extends MixerPipeData,StreamData{
+export interface MixerPipeLiveData extends MixerPipeData,StreamData,PushSimulcastInput{
     type:MIXER_PIPE_TYPE.LIVE
+
 }
 export interface MixerPipeRecordingData extends MixerPipeData{
     type:MIXER_PIPE_TYPE.RECORDING
