@@ -98,3 +98,8 @@ export declare enum MIXER_PIPE_TYPE {
     RTMP = 2,
     HLS = 3
 }
+export declare enum MIXER_RENDER_TYPE {
+    SCALE = "scale",
+    CROP = "crop",
+    PAD = "pad"
+}
