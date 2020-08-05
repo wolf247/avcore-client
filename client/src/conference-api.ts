@@ -128,6 +128,7 @@ export class ConferenceApi extends EventEmitter{
         }
     }
     private destroyClient(){
+        console.log('DISCONNECT');
         if(this.api){
             if(this.api.client.hasListeners('disconnect')){
                 this.api.client.removeListener('disconnect',this.onClientDisconnect);
