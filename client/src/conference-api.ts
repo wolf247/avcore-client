@@ -44,6 +44,7 @@ export class ConferenceApi extends EventEmitter{
         super();
         this.configs={
             worker:0,
+            stopTracks:false,
             kinds:['video','audio'],
             maxIncomingBitrate:0,
             timeout:{
