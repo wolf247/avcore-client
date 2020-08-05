@@ -388,7 +388,7 @@ export class ConferenceApi extends EventEmitter{
     private async restartAll():Promise<void>{
         const operation=this.operation;
         this.destroyClient();
-        await this.close(operation===API_OPERATION.SUBSCRIBE);
+        await this.close(false);
         this.createClient();
         if(operation===API_OPERATION.SUBSCRIBE){
             await this.subscribe()
