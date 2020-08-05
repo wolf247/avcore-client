@@ -355,6 +355,7 @@ export class ConferenceApi extends EventEmitter{
             this.emit('connectionstatechange',{state:'disconnected'});
         }
         if((hard || this.operation===API_OPERATION.SUBSCRIBE) && this.mediaStream && this.configs.stopTracks){
+            console.log('stopping tracks');
             this.mediaStream.getTracks().forEach(function(track) {
                 track.stop();
             });
