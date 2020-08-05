@@ -39,7 +39,6 @@ export class ConferenceApi extends EventEmitter{
     private transportTimeout:ReturnType<typeof setTimeout>;
     private iceServers:IceSever[]|undefined;
     private simulcast:Simulcast|undefined;
-    private readonly onClientDisconnect:()=>Promise<void>;
 
     constructor(configs:ConferenceInput){
         super();
@@ -57,13 +56,6 @@ export class ConferenceApi extends EventEmitter{
         this.log=debug(`conference-api [${this.configs.stream}]:`);
         this.createClient();
         this.device = new Device();
-        const api:ConferenceApi=this;
-        this.onClientDisconnect=async ():Promise<void>=>{
-            console.log('restarting by disconnect');
-            api.destroyClient();
-            api.createClient();
-            await api.restartAll();
-        }
     }
     async setPreferredLayers(layers:ConsumerLayers):Promise<void>{
         if(this.operation===API_OPERATION.SUBSCRIBE){
@@ -128,23 +120,17 @@ export class ConferenceApi extends EventEmitter{
         }
     }
     private destroyClient(){
-        console.log('DISCONNECT');
         if(this.api){
-            if(this.api.client.hasListeners('disconnect')){
-                this.api.client.removeListener('disconnect',this.onClientDisconnect);
-            }
-            if(this.api.client.hasListeners('error')){
-                this.api.client.removeListener('error',this.onClientDisconnect);
-            }
             this.api.clear();
         }
-
     }
 
     private createClient(){
         this.api=new MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);
-        this.api.client.on('disconnect',this.onClientDisconnect);
-        this.api.client.on('error',this.onClientDisconnect);
+        const api=this;
+        this.api.client.on('disconnect',async ()=>{
+            await api.restartAll();
+        });
     }
     private async init(operation:API_OPERATION):Promise<void>{
         if(this.operation){
@@ -401,7 +387,9 @@ export class ConferenceApi extends EventEmitter{
     }
     private async restartAll():Promise<void>{
         const operation=this.operation;
+        this.destroyClient();
         await this.close(operation===API_OPERATION.SUBSCRIBE);
+        this.createClient();
         if(operation===API_OPERATION.SUBSCRIBE){
             await this.subscribe()
         }

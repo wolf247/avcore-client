@@ -252,7 +252,9 @@ export class MediasoupSocketApi implements IMediasoupApi{
         this.closed=true;
         if(this._client){
             this._client.removeAllListeners();
-            this._client.disconnect();
+            if(this.client.connected){
+                this._client.disconnect();
+            }
         }
     }
     private async request(action:ACTION,json={}):Promise<object|boolean|void>{
