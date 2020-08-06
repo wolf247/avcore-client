@@ -39,7 +39,7 @@ export class ConferenceApi extends EventEmitter{
     private transportTimeout:ReturnType<typeof setTimeout>;
     private iceServers:IceSever[]|undefined;
     private simulcast:Simulcast|undefined;
-
+    private readonly availableKinds:MediaKind[]=[];
     constructor(configs:ConferenceInput){
         super();
         this.configs={
@@ -113,7 +113,7 @@ export class ConferenceApi extends EventEmitter{
             }
             const promises:Promise<void>[]=[];
             for (const kind of kinds) {
-                if (!this.connectors.get(kind)) {
+                if (!this.connectors.get(kind) && this.availableKinds.includes(kind)) {
                     promises.push(this.subscribeTrack(kind));
                 }
             }
@@ -167,16 +167,22 @@ export class ConferenceApi extends EventEmitter{
         const {stream}=this.configs;
         const promises:Promise<boolean>[]=[];
         this.api.client.on(EVENT.STREAM_STARTED,async ({stream,kind})=>{
-                this.unsubscribeTrack(kind);
-                console.log('on stream started',kind);
-                if(this.configs.kinds.includes(kind)){
-                    await this.subscribeTrack(kind);
-                }
-            });
+            if(!this.availableKinds.includes(kind)){
+                this.availableKinds.push(kind)
+            }
+            this.unsubscribeTrack(kind);
+            console.log('on stream started',kind);
+            if(this.configs.kinds.includes(kind)){
+                await this.subscribeTrack(kind);
+            }
+        });
         this.api.client.on(EVENT.STREAM_STOPPED,async ({stream,kind})=>{
-                console.log('on stream stopped',kind);
-                this.unsubscribeTrack(kind);
-            });
+            if(this.availableKinds.includes(kind)){
+                this.availableKinds.splice(this.availableKinds.indexOf(kind), 1);
+            }
+            console.log('on stream stopped',kind);
+            this.unsubscribeTrack(kind);
+        });
         let origin;
         if(this.configs.origin && (this.configs.url!==this.configs.origin.url || this.configs.worker!==this.configs.origin.worker)){
             const {token,worker,url}=this.configs;
