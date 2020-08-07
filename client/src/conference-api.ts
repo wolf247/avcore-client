@@ -44,7 +44,7 @@ export class ConferenceApi extends EventEmitter{
         super();
         this.configs={
             worker:0,
-            stopTracks:false,
+            stopTracks:true,
             kinds:['video','audio'],
             maxIncomingBitrate:0,
             timeout:{
@@ -288,7 +288,7 @@ export class ConferenceApi extends EventEmitter{
                 await this.removeTrack(track);
             });
 
-            const params:ProducerOptions = { track, stopTracks:this.configs.stopTracks };
+            const params:ProducerOptions = { track, stopTracks:false };
             if (this.configs.simulcast && kind==='video' && this.simulcast) {
                 if(this.simulcast.encodings){
                     params.encodings = this.simulcast.encodings;
