@@ -110,7 +110,8 @@ export interface RecordingRequest extends StreamKindsData{
     origin?:ConsumeRequestOriginData
 }
 export interface KindsOptionsData extends SizeData{
-    kinds:MediaKind[]
+    kinds:MediaKind[],
+    duration:number
 }
 export interface SizeData{
     width?:number
@@ -119,8 +120,7 @@ export interface SizeData{
 export interface KindsData{
     kinds?:MediaKind[]
 }
-export interface StreamKindsData extends StreamData{
-    kinds?:MediaKind[]
+export interface StreamKindsData extends StreamData,KindsData{
 }
 export interface StreamKindData extends StreamData{
     kind:MediaKind
@@ -131,9 +131,11 @@ export interface StreamListenData extends StreamKindData{
 export interface StreamData {
     stream:string
 }
-export interface StreamFileRequest extends StreamKindsData,KindsByFileInput,StreamingOptions,PushSimulcastInput{
+export interface StreamFileRequestOptions{
     restartOnExit?:boolean
     additionalInputOptions?:string[]
+}
+export interface StreamFileRequest extends StreamKindsData,KindsByFileInput,StreamingOptions,PushSimulcastInput,StreamFileRequestOptions{
 }
 export interface LiveStreamRequest extends StreamKindsData,StreamingOptions,PushSimulcastInput{
     url:string
@@ -242,14 +244,19 @@ export interface MixerOptions {
     z:number
     renderType?:MIXER_RENDER_TYPE
 }
-export interface MixerUpdateData extends MixerInput,StreamData{
+export interface MixerOptionsData extends MixerInput{
     options:MixerOptions
+}
+export interface MixerUpdateData extends StreamData,MixerOptionsData{
 }
 export interface MixerAddVideoData extends MixerUpdateData{
     kind:'video'
 }
 export interface MixerAddAudioData extends MixerInput,StreamData{
     kind:'audio'
+}
+export interface MixerAddFile extends MixerOptionsData,KindsData,KindsByFileInput,StreamFileRequestOptions{
+    loop?:boolean
 }
 export interface MixerRemoveData extends MixerInput,StreamKindData{
 }
