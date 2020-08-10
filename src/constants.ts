@@ -43,7 +43,7 @@ export enum ACTION {
     MIXER_START='mixerStart',
     MIXER_CLOSE='mixerClose',
     MIXER_ADD='mixerAdd',
-    MIXER_ADD_FILE='mixerAdd',
+    MIXER_ADD_FILE='mixerAddFile',
     MIXER_REMOVE='mixerRemove',
     MIXER_UPDATE='mixerUpdate',
     MIXER_PIPE_START='mixerPipeStart',

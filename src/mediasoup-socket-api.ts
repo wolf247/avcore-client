@@ -51,7 +51,7 @@ import {
     MixerPipeRecordingData,
     MixerPipeStopInput,
     MixerCreateOptions,
-    Omit, MixerPipeHlsData, LiveToHlsRequest
+    Omit, MixerPipeHlsData, LiveToHlsRequest, MixerAddVideoFileData, MixerAddAudioFileData
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi, IMediasoupApiClient} from './i-mediasoup-api';
@@ -205,7 +205,6 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async pullFromServerInputs(json:PullStreamInputsRequest):Promise<PullStreamInputsResponse>{
         return (await this.request(ACTION.PULL_FROM_SERVER_INPUTS,json) as PullStreamInputsResponse);
     }
-
     async kindsByFile(json:KindsByFileInput):Promise<KindsOptionsData>{
         return (await this.request(ACTION.KINDS_BY_FILE,json) as KindsOptionsData);
     }
@@ -232,6 +231,9 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     async mixerAdd(json:MixerAddAudioData|MixerAddVideoData):Promise<void>{
         await this.request(ACTION.MIXER_ADD,json);
+    }
+    async mixerAddFile(json:MixerAddVideoFileData|MixerAddAudioFileData):Promise<StreamData>{
+        return (await this.request(ACTION.MIXER_ADD,json) as StreamData);
     }
     async mixerUpdate(json:MixerUpdateData):Promise<void>{
         await this.request(ACTION.MIXER_UPDATE,json);

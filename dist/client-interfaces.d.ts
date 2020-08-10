@@ -255,8 +255,14 @@ export interface MixerAddVideoData extends MixerUpdateData {
 export interface MixerAddAudioData extends MixerInput, StreamData {
     kind: 'audio';
 }
-export interface MixerAddFile extends MixerOptionsData, KindsData, KindsByFileInput, StreamFileRequestOptions {
+export interface MixerAddFileData extends KindsData, KindsByFileInput, StreamFileRequestOptions {
     loop?: boolean;
+}
+export interface MixerAddVideoFileData extends MixerAddFileData, MixerOptionsData {
+    kinds: undefined | ['video'] | ['audio', 'video'] | ['video', 'audio'];
+}
+export interface MixerAddAudioFileData extends MixerAddFileData {
+    kinds: ['audio'];
 }
 export interface MixerRemoveData extends MixerInput, StreamKindData {
 }
