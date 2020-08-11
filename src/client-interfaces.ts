@@ -257,6 +257,7 @@ export interface MixerAddAudioData extends MixerInput,StreamData{
 }
 export interface MixerAddFileData extends MixerInput,KindsData,KindsByFileInput,StreamFileRequestOptions{
     loop?:boolean
+    skip?:number
 }
 export interface MixerAddVideoFileData extends MixerAddFileData,MixerOptionsData{
     kinds:undefined|['video']|['audio','video']|['video','audio']
