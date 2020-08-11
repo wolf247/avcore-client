@@ -261,6 +261,7 @@ export interface MixerAddFileData extends MixerInput, KindsData, KindsByFileInpu
 }
 export interface MixerAddVideoFileData extends MixerAddFileData, MixerOptionsData {
     kinds: undefined | ['video'] | ['audio', 'video'] | ['video', 'audio'];
+    removeOnExit?: boolean;
 }
 export interface MixerAddAudioFileData extends MixerAddFileData {
     kinds: ['audio'];
