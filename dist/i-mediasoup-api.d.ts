@@ -39,7 +39,7 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.PIPE_FROM_REMOTE_PRODUCER](json: PipeFromRemoteProducerRequest): Promise<void>;
     [ACTION.WORKER_LOAD](): Promise<WorkerLoadData>;
     [ACTION.NUM_WORKERS](): Promise<NumWorkersData>;
-    [ACTION.RECORDED_STREAMS](): Promise<ListData>;
+    [ACTION.RECORDED_STREAMS](json?: {}): Promise<ListData>;
     [ACTION.STREAM_RECORDINGS](json: StreamData): Promise<ListData>;
     [ACTION.DELETE_STREAM_RECORDINGS](json: StreamData): Promise<void>;
     [ACTION.DELETE_RECORDING](json: FilePathInput): Promise<void>;
