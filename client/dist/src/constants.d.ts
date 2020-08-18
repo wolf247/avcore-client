@@ -60,7 +60,8 @@ export declare enum EVENT {
 export declare enum STAT {
     STATS = "stats",
     TRAFFIC = "traffic",
-    CPU = "cpu"
+    CPU = "cpu",
+    STREAM = "stream"
 }
 export declare const HLS: {
     ROOT: string;

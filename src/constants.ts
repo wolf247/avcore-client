@@ -75,7 +75,8 @@ export enum EVENT {
 export enum STAT {
     STATS="stats",
     TRAFFIC='traffic',
-    CPU='cpu'
+    CPU='cpu',
+    STREAM='stream'
 }
 export const HLS={
     ROOT:'hls',
