@@ -125,6 +125,9 @@ export interface StreamKindsData extends StreamData,KindsData{
 export interface StreamKindData extends StreamData{
     kind:MediaKind
 }
+export interface StreamKindOrigin extends StreamKindData{
+    origin?:boolean
+}
 export interface StreamListenData extends StreamKindData{
     origin?:ConsumeRequestOriginData
 }
