@@ -250,12 +250,12 @@ export interface MixerOptions {
 export interface MixerOptionsData extends MixerInput {
     options: MixerOptions;
 }
-export interface MixerUpdateData extends StreamData, MixerOptionsData {
+export interface MixerUpdateData extends StreamListenData, MixerOptionsData {
 }
 export interface MixerAddVideoData extends MixerUpdateData {
     kind: 'video';
 }
-export interface MixerAddAudioData extends MixerInput, StreamData {
+export interface MixerAddAudioData extends MixerInput, StreamListenData {
     kind: 'audio';
 }
 export interface MixerAddFileData extends MixerInput, KindsData, KindsByFileInput, StreamFileRequestOptions {
