@@ -304,3 +304,6 @@ export interface LiveToHlsRequest extends StreamKindsData, HlsData {
     url: string;
     restartOnExit?: boolean;
 }
+export interface MixerCommandInput extends MixerInput {
+    command: string;
+}
