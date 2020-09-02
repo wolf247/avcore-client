@@ -208,6 +208,18 @@ export interface ConferenceServer{
 export interface ConferenceInputOrigin extends ConferenceServer{
     token?: string
 }
+export interface ProducerVideoCodecOptions {
+    videoGoogleStartBitrate?: number
+    videoGoogleMaxBitrate?: number
+    videoGoogleMinBitrate?: number
+}
+export interface ProducerAudioCodecOptions {
+    opusStereo?: boolean
+    opusFec?: boolean
+    opusDtx?: boolean
+    opusMaxPlaybackRate?: number
+    opusPtime?: number
+}
 export interface ConferenceInput {
     stopTracks?:boolean
     worker?:number
@@ -218,6 +230,10 @@ export interface ConferenceInput {
     simulcast?:boolean
     kinds?:MediaKind[]
     maxIncomingBitrate?:number
+    codecOptions?:{
+        audio?: ProducerAudioCodecOptions
+        video?: ProducerVideoCodecOptions
+    }
 }
 export interface ConferenceConfigTimeout {
     stats: number

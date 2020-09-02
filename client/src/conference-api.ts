@@ -2,7 +2,7 @@ import {EventEmitter} from "events";
 import {MediaKind, RtpCapabilities} from 'mediasoup-client/lib/RtpParameters';
 import {Device} from 'mediasoup-client';
 import {Transport, TransportOptions} from 'mediasoup-client/lib/Transport';
-import {Producer, ProducerOptions} from 'mediasoup-client/lib/Producer';
+import {Producer, ProducerCodecOptions, ProducerOptions} from 'mediasoup-client/lib/Producer';
 import {Consumer} from 'mediasoup-client/lib/Consumer';
 import {debug}  from 'debug';
 import {
@@ -287,14 +287,21 @@ export class ConferenceApi extends EventEmitter{
             track.addEventListener('ended', async ()=>{
                 await this.removeTrack(track);
             });
-
-            const params:ProducerOptions = { track, stopTracks:false };
+            let codecOptions:ProducerCodecOptions|undefined;
+            if(this.configs.codecOptions && this.configs.codecOptions[kind]){
+                codecOptions=this.configs.codecOptions[kind];
+            }
+            const params:ProducerOptions = { track, stopTracks:false, codecOptions};
             if (this.configs.simulcast && kind==='video' && this.simulcast) {
                 if(this.simulcast.encodings){
                     params.encodings = this.simulcast.encodings;
                 }
                 if(this.simulcast.codecOptions){
-                    params.codecOptions=this.simulcast.codecOptions
+                    let _codecOptions=this.simulcast.codecOptions;
+                    if(params.codecOptions){
+                        _codecOptions={...codecOptions,...params.codecOptions}
+                    }
+                    params.codecOptions=_codecOptions;
                 }
             }
             const producer=await this.transport.produce(params);
