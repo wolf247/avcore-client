@@ -266,9 +266,9 @@ export interface MixerOptions {
 export interface MixerOptionsData extends MixerInput {
     options: MixerOptions;
 }
-export interface MixerUpdateData extends StreamListenData, MixerOptionsData {
+export interface MixerUpdateData extends StreamData, MixerOptionsData {
 }
-export interface MixerAddVideoData extends MixerUpdateData {
+export interface MixerAddVideoData extends MixerUpdateData, StreamListenData {
     kind: 'video';
 }
 export interface MixerAddAudioData extends MixerInput, StreamListenData {
