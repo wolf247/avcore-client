@@ -180,7 +180,7 @@ export interface PortData {
 export interface PushSimulcastInput {
     simulcast?:SizeData[]
 }
-export interface PushStreamOptionsRequest extends PullStreamInputsRequest,PushSimulcastInput{
+export interface PushStreamOptionsRequest extends PullStreamInputs,PushSimulcastInput{
     bindPorts?:boolean
 }
 export interface PushStreamRequest extends StreamKindsData{
@@ -193,9 +193,11 @@ export interface TransportListenIp {
     ip: string
     announcedIp?: string
 }
-export interface PullStreamInputsRequest extends StreamKindsData{
+export interface PullStreamInputs extends StreamKindsData{
     listenIp?:TransportListenIp|string
     layer?:number
+}
+export interface PullStreamInputsRequest extends PullStreamInputs{
     id:string
 }
 export interface PullStreamInputsResponse{
