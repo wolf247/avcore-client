@@ -254,7 +254,7 @@ export interface ListRecordingItem {
     url:string
 }
 export interface ListRecordingsData {
-    ListRecordingItem:string[];
+    list:ListRecordingItem[];
 }
 export interface FilePathInput {
     filePath:string;
