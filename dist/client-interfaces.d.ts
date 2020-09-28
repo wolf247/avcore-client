@@ -249,6 +249,13 @@ export interface ConferenceConfig extends ConferenceInput {
 export interface ListData {
     list: string[];
 }
+export interface ListRecordingItem {
+    key: string;
+    url: string;
+}
+export interface ListRecordingsData {
+    ListRecordingItem: string[];
+}
 export interface FilePathInput {
     filePath: string;
 }

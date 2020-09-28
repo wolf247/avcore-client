@@ -54,7 +54,7 @@ import {
     LiveToHlsRequest,
     MixerAddAudioFileData,
     MixerAddVideoFileData,
-    StreamKindOrigin, MixerCommandInput
+    StreamKindOrigin, MixerCommandInput, ListRecordingsData
 } from './client-interfaces';
 export interface IMediasoupApiClient {
     on(event: 'error', listener: (error) => void): this
@@ -95,7 +95,7 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.WORKER_LOAD]():Promise<WorkerLoadData>
     [ACTION.NUM_WORKERS]():Promise<NumWorkersData>
     [ACTION.RECORDED_STREAMS](json?:{}):Promise<ListData>
-    [ACTION.STREAM_RECORDINGS](json:StreamData):Promise<ListData>
+    [ACTION.STREAM_RECORDINGS](json:StreamData):Promise<ListRecordingsData>
     [ACTION.DELETE_STREAM_RECORDINGS](json:StreamData):Promise<void>
     [ACTION.DELETE_RECORDING](json:FilePathInput):Promise<void>
     [ACTION.PUSH_TO_SERVER_INPUTS](json:PushStreamInputsRequest):Promise<PushStreamInputsResponse>

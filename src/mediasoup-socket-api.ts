@@ -51,7 +51,13 @@ import {
     MixerPipeRecordingData,
     MixerPipeStopInput,
     MixerCreateOptions,
-    Omit, MixerPipeHlsData, LiveToHlsRequest, MixerAddVideoFileData, MixerAddAudioFileData, MixerCommandInput
+    Omit,
+    MixerPipeHlsData,
+    LiveToHlsRequest,
+    MixerAddVideoFileData,
+    MixerAddAudioFileData,
+    MixerCommandInput,
+    ListRecordingsData
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi, IMediasoupApiClient} from './i-mediasoup-api';
@@ -184,8 +190,8 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async recordedStreams():Promise<ListData>{
         return (await this.request(ACTION.RECORDED_STREAMS) as ListData);
     }
-    async streamRecordings(json:StreamData):Promise<ListData>{
-        return (await this.request(ACTION.STREAM_RECORDINGS,json) as ListData);
+    async streamRecordings(json:StreamData):Promise<ListRecordingsData>{
+        return (await this.request(ACTION.STREAM_RECORDINGS,json) as ListRecordingsData);
     }
     async deleteStreamRecordings(json:StreamData):Promise<void>{
         await this.request(ACTION.DELETE_STREAM_RECORDINGS,json);
