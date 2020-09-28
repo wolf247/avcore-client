@@ -194,6 +194,7 @@ export interface TransportListenIp {
 export interface PullStreamInputsRequest extends StreamKindsData {
     listenIp?: TransportListenIp | string;
     layer?: number;
+    id: string;
 }
 export interface PullStreamInputsResponse {
     sdp: string;
