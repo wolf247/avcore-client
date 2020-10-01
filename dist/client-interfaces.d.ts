@@ -251,14 +251,14 @@ export interface ConferenceConfig extends ConferenceInput {
 }
 export interface StreamListItem {
     stream: string;
-    lastModified: Date;
+    lastModified: number;
 }
 export interface StreamListData {
     list: StreamListItem[];
 }
 export interface StorageItem {
     key: string;
-    lastModified: Date;
+    lastModified: number;
 }
 export interface ListRecordingItem extends StorageItem {
     url: string;
