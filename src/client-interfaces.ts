@@ -249,11 +249,18 @@ export interface ConferenceConfig extends ConferenceInput{
     maxIncomingBitrate:number
     timeout: ConferenceConfigTimeout
 }
-export interface ListData {
-    list:string[];
+export interface StreamListItem {
+    stream:string
+    lastModified:Date
 }
-export interface ListRecordingItem {
+export interface StreamListData {
+    list:StreamListItem[];
+}
+export interface StorageItem {
     key:string
+    lastModified:Date
+}
+export interface ListRecordingItem extends StorageItem{
     url:string
 }
 export interface ListRecordingsData {

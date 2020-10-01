@@ -23,7 +23,7 @@ import {
     TransportBitrateData,
     TransportData,
     WorkerLoadData,
-    ListData,
+    StreamListData,
     StreamData,
     FilePathInput,
     PushStreamInputsRequest,
@@ -187,8 +187,8 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async stopFileStreaming(json:StreamKindsData):Promise<void>{
         await this.request(ACTION.STOP_FILE_STREAMING,json);
     }
-    async recordedStreams():Promise<ListData>{
-        return (await this.request(ACTION.RECORDED_STREAMS) as ListData);
+    async recordedStreams():Promise<StreamListData>{
+        return (await this.request(ACTION.RECORDED_STREAMS) as StreamListData);
     }
     async streamRecordings(json:StreamData):Promise<ListRecordingsData>{
         return (await this.request(ACTION.STREAM_RECORDINGS,json) as ListRecordingsData);

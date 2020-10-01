@@ -22,7 +22,7 @@ import {
     TransportBitrateData,
     TransportData,
     WorkerLoadData,
-    ListData,
+    StreamListData,
     StreamData,
     FilePathInput,
     PullStreamInputsRequest,
@@ -94,7 +94,7 @@ export interface IMediasoupApi extends Record<ACTION, (json:{})=>Promise<{}|void
     [ACTION.PIPE_FROM_REMOTE_PRODUCER](json:PipeFromRemoteProducerRequest):Promise<void>
     [ACTION.WORKER_LOAD]():Promise<WorkerLoadData>
     [ACTION.NUM_WORKERS]():Promise<NumWorkersData>
-    [ACTION.RECORDED_STREAMS](json?:{}):Promise<ListData>
+    [ACTION.RECORDED_STREAMS](json?:{}):Promise<StreamListData>
     [ACTION.STREAM_RECORDINGS](json:StreamData):Promise<ListRecordingsData>
     [ACTION.DELETE_STREAM_RECORDINGS](json:StreamData):Promise<void>
     [ACTION.DELETE_RECORDING](json:FilePathInput):Promise<void>
