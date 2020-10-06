@@ -80,7 +80,7 @@ export interface TransportData {
 export interface TransportBitrateData extends TransportData{
     bitrate:number
 }
-export interface IceSever {
+export interface IceServer {
     urls: string[];
     username?: string;
     credential?: string;
@@ -91,7 +91,7 @@ export interface Simulcast {
 }
 export interface ServerConfigs {
     routerRtpCapabilities:RtpCapabilities
-    iceServers?:IceSever[]
+    iceServers?:IceServer[]
     simulcast?:Simulcast
     timeout?:{
         stats: number

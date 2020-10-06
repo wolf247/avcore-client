@@ -14,7 +14,7 @@ import {
     ConferenceInput,
     ConsumeRequest,
     ConsumerLayers,
-    IceSever,
+    IceServer,
     Simulcast
 } from 'avcore';
 export declare interface ConferenceApi {
@@ -37,7 +37,7 @@ export class ConferenceApi extends EventEmitter{
     private transport:Transport;
     private mediaStream?:MediaStream;
     private transportTimeout:ReturnType<typeof setTimeout>;
-    private iceServers:IceSever[]|undefined;
+    private iceServers:IceServer[]|undefined;
     private simulcast:Simulcast|undefined;
     private readonly availableKinds:MediaKind[]=[];
     constructor(configs:ConferenceInput){
