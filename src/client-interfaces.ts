@@ -291,7 +291,7 @@ export interface MixerAddVideoData extends MixerUpdateData,StreamListenData{
 export interface MixerAddAudioData extends MixerInput,StreamListenData{
     kind:'audio'
 }
-export interface MixerAddFileData extends MixerInput,KindsData,KindsByFileInput,StreamFileRequestOptions{
+export interface MixerAddFileData extends MixerPipeData,StreamData,KindsByFileInput,StreamFileRequestOptions{
     loop?:boolean
     skip?:number
     removeOnExit?:boolean
