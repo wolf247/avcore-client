@@ -238,8 +238,8 @@ export class MediasoupSocketApi implements IMediasoupApi{
     async mixerAdd(json:MixerAddAudioData|MixerAddVideoData):Promise<void>{
         await this.request(ACTION.MIXER_ADD,json);
     }
-    async mixerAddFile(json:MixerAddVideoFileData|MixerAddAudioFileData):Promise<StreamData>{
-        return (await this.request(ACTION.MIXER_ADD_FILE,json) as StreamData);
+    async mixerAddFile(json:MixerAddVideoFileData|MixerAddAudioFileData):Promise<void>{
+        await this.request(ACTION.MIXER_ADD_FILE,json);
     }
     async mixerUpdate(json:MixerUpdateData):Promise<void>{
         await this.request(ACTION.MIXER_UPDATE,json);

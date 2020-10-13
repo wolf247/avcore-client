@@ -58,7 +58,7 @@ export declare class MediasoupSocketApi implements IMediasoupApi {
     mixerStart(json: MixerCreateOptions): Promise<MixerInput>;
     mixerClose(json: MixerInput): Promise<void>;
     mixerAdd(json: MixerAddAudioData | MixerAddVideoData): Promise<void>;
-    mixerAddFile(json: MixerAddVideoFileData | MixerAddAudioFileData): Promise<StreamData>;
+    mixerAddFile(json: MixerAddVideoFileData | MixerAddAudioFileData): Promise<void>;
     mixerUpdate(json: MixerUpdateData): Promise<void>;
     mixerRemove(json: MixerRemoveData): Promise<void>;
     mixerPipeStart(json: MixerPipeLiveData | MixerPipeRecordingData | MixerPipeRtmpData | MixerPipeHlsData): Promise<MixerPipeInput>;
