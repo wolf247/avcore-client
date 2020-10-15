@@ -223,13 +223,8 @@ export interface ProducerAudioCodecOptions {
     opusMaxPlaybackRate?: number
     opusPtime?: number
 }
-export interface ConferenceInput {
+export interface ConferenceBasicInput {
     stopTracks?:boolean
-    worker?:number
-    url:string
-    origin?: ConferenceInputOrigin
-    stream: string
-    token: string
     simulcast?:boolean
     kinds?:MediaKind[]
     maxIncomingBitrate?:number
@@ -237,6 +232,13 @@ export interface ConferenceInput {
         audio?: ProducerAudioCodecOptions
         video?: ProducerVideoCodecOptions
     }
+}
+export interface ConferenceInput extends ConferenceBasicInput{
+    worker?:number
+    url:string
+    origin?: ConferenceInputOrigin
+    stream: string
+    token: string
 }
 export interface ConferenceConfigTimeout {
     stats: number
