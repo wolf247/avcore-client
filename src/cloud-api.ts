@@ -1,12 +1,17 @@
 import {default as axios} from 'axios';
 import {API_OPERATION} from './constants';
 import {MediasoupSocketApi} from './mediasoup-socket-api';
-
 export class CloudApi {
-    static async create(cloudUrl:string,clientToken:string,operation:API_OPERATION,log?:typeof console.log ) {
-        const {data:{config:{url, worker, token}}} =  await axios.post(`${cloudUrl}/api/customer/config/api`,{operation:API_OPERATION.MIXER},{
-            headers: { 'Content-Type': 'application/json', "Authorization":`Bearer ${clientToken}` },
+    private readonly url;
+    private readonly token;
+    constructor(url:string,token:string) {
+        this.url=url;
+        this.token=token;
+    }
+    async create(operation:API_OPERATION):Promise<MediasoupSocketApi> {
+        const {data:{config:{url, worker, token}}} =  await axios.post(`${this.url}/api/customer/config/api`,{operation},{
+            headers: { 'Content-Type': 'application/json', "Authorization":`Bearer ${this.token}` },
         });
-        return new MediasoupSocketApi(url, worker, token, log)
+        return new MediasoupSocketApi(url, worker, token)
     }
 }
