@@ -5,6 +5,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Codeda",
+  "keywords": [
+    "avcore"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:codeda/avcore-client.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/socket.io-client": "^1.4.33",
