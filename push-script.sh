@@ -10,6 +10,15 @@ cd ${tmpDir}
 git clone git@github.com:anovikov1984/avcore.git 
 cd avcore
 
+# update version
+VERSION=$(npm view avcore version)
+IFS="." read -ra NUMS <<< "$VERSION"
+((NUMS[2]++))
+
+UPD_VER=$( IFS=$'.'; echo "${NUMS[*]}" )
+npm version $UPD_VER
+# 
+
 git checkout -b temp
 
 for var in "${elements[@]}"
@@ -30,18 +39,10 @@ git remote rm tempremote
 
 cd ..
 
-# update version
+# publish
 git clone git@github.com:codeda/avcore-client.git
 cd avcore-client
 
-VERSION=$(npm view avcore version)
-IFS="." read -ra NUMS <<< "$VERSION"
-((NUMS[2]++))
-
-UPD_VER=$( IFS=$'.'; echo "${NUMS[*]}" )
-
-npm version $UPD_VER
 npm publish
-
 
 rm -rf "${tmpDir}"
