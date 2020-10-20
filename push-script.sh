@@ -2,7 +2,7 @@
 chmod +x ./push-script.sh
 
 
-elements=("src/" "client/src/" "push-script.sh" "**/package-lock.json" "**/test.ts" "**/tsconfig.json" "**/webpack.config.js")
+elements=("src/" "client/src/" "push-script.sh" "package-lock.json" "test.ts" "tsconfig.json" "webpack.config.js" "**/package-lock.json" "**/test.ts" "**/tsconfig.json" "**/webpack.config.js")
 
 tmpDir=$(mktemp -d /tmp/git-copy-XXXXXX)
 cd ${tmpDir}
