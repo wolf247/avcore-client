@@ -1,10 +1,17 @@
 {
   "name": "avcore",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "avcore client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Codeda",
+  "keywords": [
+    "avcore"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:codeda/avcore-client.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/socket.io-client": "^1.4.33",
