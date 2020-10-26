@@ -5,4 +5,5 @@ export declare class CloudApi {
     private readonly token;
     constructor(url: string, token: string);
     create(operation: API_OPERATION): Promise<MediasoupSocketApi>;
+    hlsUrl(pipeId: string): string;
 }
