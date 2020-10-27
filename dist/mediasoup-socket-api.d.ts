@@ -65,6 +65,7 @@ export declare class MediasoupSocketApi implements IMediasoupApi {
     mixerPipeStop(json: MixerPipeStopInput): Promise<void>;
     mixerCommand(json: MixerCommandInput): Promise<void>;
     listenMixerStopped(json: MixerInput): Promise<boolean>;
+    hlsUrl(pipeId: string): string;
     clear(): void;
     private request;
     private socketRequest;

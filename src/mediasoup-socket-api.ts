@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import {default as axios} from 'axios';
-import {ACTION, ERROR, PATH, SOCKET_ONLY_ACTIONS} from './constants';
+import {ACTION, ERROR, HLS, PATH, SOCKET_ONLY_ACTIONS} from './constants';
 import {
     ConnectTransportRequest,
     ConsumerData,
@@ -259,6 +259,9 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     async listenMixerStopped(json:MixerInput):Promise<boolean>{
         return (await this.request(ACTION.LISTEN_MIXER_STOPPED,json) as boolean);
+    }
+    hlsUrl(pipeId:string){
+        return `${this.url}/${HLS.ROOT}/${pipeId}/${HLS.PLAYLIST}`
     }
     clear():void{
         this.closed=true;
