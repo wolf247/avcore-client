@@ -1,8 +1,8 @@
-#AVCore npm package installation
+## AVCore npm package installation
 
 Just run `npm i avcore`
 
-##Share client files
+## Share client files
 
 Add to your nodejs backend
 ```typescript
@@ -16,7 +16,7 @@ Use this script tags in your html pages
 <script type="text/javascript" src="/avcore-client/index.js"></script>
 <script type="text/javascript" src="/avcore/index.js"></script>
 ```
-##Import from avcore package
+## Import from avcore package
 
 In JavaScript:
 ```javascript
@@ -39,7 +39,7 @@ import {CloudClient,Utils} from 'avcore/client/dist';
 This package has frontend-only classes
 
 
-##Create AVCore cloud client and api instance
+## Create AVCore cloud client and api instance
 ```
 const clientToken = "<YOUR-CLIENT-TOKEN>";
 ```
@@ -53,7 +53,7 @@ const cloudApi = new CloudApi('https://avcore.io',clientToken);
 ```
 `CloudApi` can be used from both backend and frontend
 
-##Publishing stream
+## Publishing stream
 ```javascript
 (async function () {
     const {CloudClient,Utils}=avcoreClient;
@@ -76,7 +76,7 @@ const cloudApi = new CloudApi('https://avcore.io',clientToken);
     }).publish(mediaStream);
 })()
 ```
-##Subscribe stream
+## Subscribe stream
 ```javascript
 (async function () {
     const {CloudClient,Utils}=avcoreClient;
