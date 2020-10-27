@@ -1,6 +1,9 @@
-##AVCore npm package installation
+#AVCore npm package installation
+
 Just run `npm i avcore`
+
 ##Share client files
+
 Add to your nodejs backend
 ```typescript
 import * as express from 'express';
@@ -14,6 +17,7 @@ Use this script tags in your html pages
 <script type="text/javascript" src="/avcore/index.js"></script>
 ```
 ##Import from avcore package
+
 In JavaScript:
 ```javascript
 const {CloudApi,API_OPERATION}=avcore;
