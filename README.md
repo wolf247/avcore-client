@@ -20,7 +20,7 @@ Use this script tags in your html pages
 
 In JavaScript:
 ```javascript
-const {CloudApi,API_OPERATION}=avcore;
+const {CloudApi,API_OPERATION} = avcore;
 ```
 In TypeScript
 ```typescript
@@ -30,7 +30,7 @@ This package has interfaces, enums, constants and all classes that can be used o
 ##Import from avcore-client package
 In JavaScript:
 ```javascript
-const {CloudClient,Utils}=avcoreClient;
+const {CloudClient,Utils} = avcoreClient;
 ```
 In TypeScript
 ```typescript
@@ -56,8 +56,8 @@ const cloudApi = new CloudApi('https://avcore.io',clientToken);
 ## Publishing stream
 ```javascript
 (async function () {
-    const {CloudClient,Utils}=avcoreClient;
-    const {API_OPERATION}=avcore;
+    const {CloudClient,Utils} = avcoreClient;
+    const {API_OPERATION} = avcore;
     const clientToken = "<YOUR-CLIENT-TOKEN>";
     const cloudClient = new CloudClient('https://avcore.io',clientToken);
     const stream=Math.random().toString(36).substr(2) //some random string;
@@ -68,7 +68,10 @@ const cloudApi = new CloudApi('https://avcore.io',clientToken);
         video:kinds.includes('video'),
         audio:kinds.includes('audio')
     },isScreenShare); //you can receive any stream from navigator.mediaDevices directly w/o our utils
-    const client = await cloudClient.create(API_OPERATION.PUBLISH,stream,{kinds,simulcast});
+    const client = await cloudClient.create(API_OPERATION.PUBLISH,stream,{
+        kinds,
+        simulcast
+    });
     client.on('bitRate',({bitRate,kind})=>{
         console.log(`current publish bitrate for ${kind} track is ${bitRate}`)
     }).on('connectionstatechange',({state})=>{
