@@ -27,7 +27,8 @@ In TypeScript
 import { CloudApi,API_OPERATION} from 'avcore';
 ```
 This package has interfaces, enums, constants and all classes that can be used on both client and server parts
-##Import from avcore-client package
+
+## Import from avcore-client package
 In JavaScript:
 ```javascript
 const {CloudClient,Utils} = avcoreClient;
