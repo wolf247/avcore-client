@@ -238,10 +238,15 @@ console.log(`your file/url has: ${kinds.join(', ')}`);
 ## HLS re-streaming
 ```javascript
 const api = await cloudApi.create(API_OPERATION.STREAMING);
-const {pipeId} = await api.liveToHls({kinds, stream, url, formats:[
-    {videoBitrate:4000},//full size and fixed bitrate
-    {videoBitrate:2000, height:720} //height 720, width by ratio, fixed bitrate
-]});
+const {pipeId} = await api.liveToHls({
+    kinds, 
+    stream, 
+    url, 
+    formats:[//two qualities
+        {videoBitrate:4000},//full size and fixed bitrate
+        {videoBitrate:2000, height:720} //height 720, width by ratio, fixed bitrate
+    ]
+});
 const hlsUrl=api.hlsUrl(pipeId);
 console.log(`use this HLS-url: ${hlsUrl}`);
 ```
@@ -265,10 +270,10 @@ api.mixerAdd({mixerId,stream:'<your-second-stream-id>',kind:'audio'});
 Add videos to mixer
 ```javascript
 api.mixerAdd({mixerId,stream:'<some-first-stream-id>',kind:'video',options:{
-    x:0,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //left top half cropped to size
+    x:0,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //left top quarter cropped to size
 }});
 api.mixerAdd({mixerId,stream:'<some-second-stream-id>',kind:'video',options:{
-    x:640,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //right top half cropped to size
+    x:640,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //right top quarter cropped to size
 }});
 ```
 Add custom file/stream (rtmp,rtsp,http) to mixer (you can use `kindsByFile` example to check your source)
@@ -295,4 +300,54 @@ Remove stream from mixer
 ```javascript
 api.mixerRemove({mixerId,stream:'<your-second-stream-id>',kind:'video'});
 api.mixerRemove({mixerId,stream:'<your-second-stream-id>',kind:'audio'});
+```
+Close mixer and all its outputs
+```javascript
+await api.mixerClose({mixerId});
+```
+Push mixer output to WebRTC-stream (you can watch it like in **Subscribe stream** example)
+```javascript
+const {pipeId}=await api.mixerPipeStart({mixerId,type:MIXER_PIPE_TYPE.LIVE,stream:'<some-mixed-stream-id>'});
+```
+Can be stopped with `mixerPipeStop`
+```javascript
+await api.mixerPipeStop({mixerId,pipeId});
+```
+Push mixer output to your RTMP-server (can be also stopped with `mixerPipeStop`by `pipeId`). Join your RTMP-app url with your stream key as single `url`
+```javascript
+const {pipeId}=await api.mixerPipeStart({mixerId,type:MIXER_PIPE_TYPE.RTMP,url:'rtmp://example.com/live/some-stream-key'});
+```
+Push mixer output to HLS (can be also stopped with `mixerPipeStop`by `pipeId`)
+```javascript
+const {pipeId}=await api.mixerPipeStart({
+    mixerId,
+    kinds,
+    type:MIXER_PIPE_TYPE.HLS,
+    formats:[ //two qualities
+        {videoBitrate:4000},//full size and fixed bitrate
+        {videoBitrate:2000, height:720} //height 720, width by ratio, fixed bitrate
+    ]
+});
+const hlsUrl=api.hlsUrl(pipeId);
+console.log(`use this HLS-url: ${hlsUrl}`);
+```
+Record mixer output to single file (you can stop recording with `mixerPipeStop` by `pipeId`).
+```javascript
+const {pipeId}=await api.mixerPipeStart({mixerId,type:MIXER_PIPE_TYPE.RECORDING});
+```
+Find your recording by `pipeId`
+```javascript
+const api = await cloudApi.create(API_OPERATION.RECORDING);
+const {list} = await api.streamRecordings({stream:pipeId});
+/*
+{
+   "list":[
+      {
+         "key":"623d31e8-b8cf-4a23-8fb9-bfb3aeef8c33_mixer_1602773080145.mkv",
+         "lastModified":1602773080258,
+         "url":"<signed url>"
+      }
+   ]
+}
+*/
 ```
