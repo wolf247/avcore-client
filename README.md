@@ -255,7 +255,7 @@ Can be stopped the same way
 await api.stopFileStreaming({stream});
 ```
 
-#Using stream mixer
+## Using stream mixer
 Create stream mixer
 ```javascript
 const api = await cloudApi.create(API_OPERATION.MIXER);
