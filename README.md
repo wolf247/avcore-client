@@ -245,7 +245,54 @@ const {pipeId} = await api.liveToHls({kinds, stream, url, formats:[
 const hlsUrl=api.hlsUrl(pipeId);
 console.log(`use this HLS-url: ${hlsUrl}`);
 ```
-Can be stopped same way 
+Can be stopped the same way 
 ```javascript
 await api.stopFileStreaming({stream});
+```
+
+#Using stream mixer
+Create stream mixer
+```javascript
+const api = await cloudApi.create(API_OPERATION.MIXER);
+const {mixerId}=await api.mixerStart({width:1280, height:720});
+console.log(`your mixer id is ${mixerId}`);
+```
+Add audios to mixer
+```javascript
+api.mixerAdd({mixerId,stream:'<your-first-stream-id>',kind:'audio'});
+api.mixerAdd({mixerId,stream:'<your-second-stream-id>',kind:'audio'});
+```
+Add videos to mixer
+```javascript
+api.mixerAdd({mixerId,stream:'<some-first-stream-id>',kind:'video',options:{
+    x:0,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //left top half cropped to size
+}});
+api.mixerAdd({mixerId,stream:'<some-second-stream-id>',kind:'video',options:{
+    x:640,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //right top half cropped to size
+}});
+```
+Add custom file/stream (rtmp,rtsp,http) to mixer (you can use `kindsByFile` example to check your source)
+ ```javascript
+api.mixerAddFile({
+    mixerId,
+    stream:'some-third-stream-id',
+    kinds:['audio','video'],
+    options:{
+        x:0,y:360,width:1280,height:360,z:0,renderType:MIXER_RENDER_TYPE.PAD //bottom part with padding
+    },
+    filePath:'<url to your file or stream>',
+    removeOnExit:true, //set false to keep last frame until removed from mixer
+    loop:false//set true to loop your stream
+})
+```
+Update video in mixer
+```javascript
+api.mixerUpdate({mixerId,stream:'<some-first-stream-id>',options:{
+    x:640,y:360,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //move to bottom right corner
+}});
+```
+Remove stream from mixer
+```javascript
+api.mixerRemove({mixerId,stream:'<your-second-stream-id>',kind:'video'});
+api.mixerRemove({mixerId,stream:'<your-second-stream-id>',kind:'audio'});
 ```
