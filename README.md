@@ -137,3 +137,79 @@ playbackVideo.addEventListener('volumechange', function (_) {
     unmuteButton.disabled=!playbackVideo.muted && playbackVideo.volume>0.01;
 });
 ```
+## Error handling
+You can use `ERROR` enum from `avcore` package
+```javascript
+const {ERROR}=avcore;
+try {
+    ///your code
+}
+catch (e) {
+    if(e && ERROR[e.errorId]){
+        console.log(`AVCore returned ${ERROR[e.errorId]} error`)
+    }
+    else {
+         console.log(`Not AVCore error: ${e}`)
+    }
+}
+```
+
+## Stream recording
+```javascript
+const api = await cloudApi.create(API_OPERATION.RECORDING);
+await api.startRecording({stream,kinds});
+```
+It will create separate files for audio and video every time stream will be started and stopped until your call
+```javascript
+await api.stopRecording({stream,kinds});
+```
+For single-file recording you can use mixer with single stream on it.
+
+## Manage your recordings
+Get list of all streams that was recorded
+```javascript
+const api = await cloudApi.create(API_OPERATION.RECORDING);
+const {list}=await api.recordedStreams();
+/*
+  {
+     "list":[
+        {
+           "stream":"5b8da1e7-c1b0-4753-8d3a-8cb86cff7399",
+           "lastModified":1603872075759
+        },
+        {
+           "stream":"kdufy4e842",
+           "lastModified":1603872012712
+        }
+     ]
+  }  
+*/
+```
+Get list of all recordings by stream
+```javascript
+const {list}=await api.streamRecordings({stream:'kdufy4e842'});
+/*
+{
+   "list":[
+      {
+         "key":"5f8d55bab0ca45e9ff24f636/kdufy4e842_video_1603872012681.mp4",
+         "lastModified":1603872012712,
+         "url":"<signed url>"
+      },
+      {
+         "key":"5f8d55bab0ca45e9ff24f636/kdufy4e842_audio_1603872002685.webm",
+         "lastModified":1603872002709,
+         "url":"<signed url>"
+      }
+   ]
+}
+*/
+```
+Remove single recording
+```javascript
+await api.deleteRecording({filePath:'5f8d55bab0ca45e9ff24f636/kdufy4e842_video_1603872012681.mp4'});
+```
+Remove all recordings by stream
+```javascript
+await api.deleteStreamRecordings({stream:'kdufy4e842'});
+```
