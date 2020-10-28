@@ -41,15 +41,15 @@ This package has frontend-only classes
 
 
 ## Create AVCore cloud client and api instance
-```
+```javascript
 const clientToken = "<YOUR-CLIENT-TOKEN>";
 ```
 Get your client token from admin dashboard
-```
+```javascript
 const cloudClient = new CloudClient('https://avcore.io',clientToken);
 ```
 `CloudClient` is for frontend only and working with *MediaStream*s
-```
+```javascript
 const cloudApi = new CloudApi('https://avcore.io',clientToken);
 ```
 `CloudApi` can be used from both backend and frontend
