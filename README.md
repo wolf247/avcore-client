@@ -63,7 +63,7 @@ const cloudApi = new CloudApi('https://avcore.io',clientToken);
     const stream=Math.random().toString(36).substr(2) //some random string;
     const kinds=['audio','video'] //can be also ['audio'] or ['video'] only;
     const isScreenShare=false; //set true for screen share stream
-    const simulcast=!isScreenShare; //google chrome had many issues for screen share simulcast
+    const simulcast=!isScreenShare; //google chrome has many issues for screen share simulcast
     const mediaStream=await Utils.getUserMedia({
         video:kinds.includes('video'),
         audio:kinds.includes('audio')
