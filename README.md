@@ -229,6 +229,11 @@ You can play this stream using **Subscribe stream** example. You can stop it by 
 ```javascript
 await api.stopFileStreaming({stream});
 ```
+Optionally check your file/url having audio/video
+```javascript
+const {kinds} = await api.kindsByFile({filePath: url});
+console.log(`your file/url has: ${kinds.join(', ')}`);
+```
 
 ## HLS re-streaming
 ```javascript
