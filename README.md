@@ -213,3 +213,34 @@ Remove all recordings by stream
 ```javascript
 await api.deleteStreamRecordings({stream:'kdufy4e842'});
 ```
+
+## Stream from a file and live re-streaming (rtmp,rtsp,http)
+```javascript
+const url='<url to your file or stream>';
+const isSimulcast=false;//set true for simulcast
+const simulcast = isSimulcast?[
+    {height: 240}, //height 240, width by ratio
+    {} //full size
+]:undefined;
+const api = await cloudApi.create(API_OPERATION.STREAMING);
+await api.liveStreaming({kinds, stream, url, simulcast});
+```
+You can play this stream using **Subscribe stream** example. You can stop it by `stopFileStreaming`
+```javascript
+await api.stopFileStreaming({stream});
+```
+
+## HLS re-streaming
+```javascript
+const api = await cloudApi.create(API_OPERATION.STREAMING);
+const {pipeId} = await api.liveToHls({kinds, stream, url, formats:[
+    {videoBitrate:4000},//full size and fixed bitrate
+    {videoBitrate:2000, height:720} //height 720, width by ratio, fixed bitrate
+]});
+const hlsUrl=api.hlsUrl(pipeId);
+console.log(`use this HLS-url: ${hlsUrl}`);
+```
+Can be stopped same way 
+```javascript
+await api.stopFileStreaming({stream});
+```
