@@ -57,7 +57,7 @@ import {
     MixerAddVideoFileData,
     MixerAddAudioFileData,
     MixerCommandInput,
-    ListRecordingsData
+    ListRecordingsData, ConsumeRequestOriginDataServer, ConsumeRequestOriginData
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi, IMediasoupApiClient} from './i-mediasoup-api';
@@ -228,7 +228,6 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     async liveToHls(json:LiveToHlsRequest):Promise<MixerPipeInput>{
         return (await this.request(ACTION.LIVE_TO_HLS,json) as MixerPipeInput);
-
     }
     async mixerStart(json:MixerCreateOptions):Promise<MixerInput>{
         return (await this.request(ACTION.MIXER_START,json) as MixerInput);
@@ -262,6 +261,12 @@ export class MediasoupSocketApi implements IMediasoupApi{
     }
     hlsUrl(pipeId:string){
         return `${this.url}/${HLS.ROOT}/${pipeId}/${HLS.PLAYLIST}`
+    }
+    streamOrigin(source:ConsumeRequestOriginDataServer):ConsumeRequestOriginData|undefined{
+        if(source && source.url!==this.url){
+            const {url,token,worker}=this;
+            return {source,target:{url,token,worker}}
+        }
     }
     clear():void{
         this.closed=true;
