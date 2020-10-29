@@ -46,11 +46,11 @@ const clientToken = "<YOUR-CLIENT-TOKEN>";
 ```
 Get your client token from admin dashboard
 ```javascript
-const cloudClient = new CloudClient('https://avcore.io',clientToken);
+const cloudClient = new CloudClient('https://admin.avcore.io',clientToken);
 ```
 `CloudClient` is for frontend only and working with *MediaStream*s
 ```javascript
-const cloudApi = new CloudApi('https://avcore.io',clientToken);
+const cloudApi = new CloudApi('https://admin.avcore.io',clientToken);
 ```
 `CloudApi` can be used from both backend and frontend
 
@@ -60,7 +60,7 @@ const cloudApi = new CloudApi('https://avcore.io',clientToken);
     const {CloudClient,Utils} = avcoreClient;
     const {API_OPERATION} = avcore;
     const clientToken = "<YOUR-CLIENT-TOKEN>";
-    const cloudClient = new CloudClient('https://avcore.io',clientToken);
+    const cloudClient = new CloudClient('https://admin.avcore.io',clientToken);
     const stream=Math.random().toString(36).substr(2) //some random string;
     const kinds=['audio','video'] //can be also ['audio'] or ['video'] only;
     const isScreenShare=false; //set true for screen share stream
@@ -86,7 +86,7 @@ const cloudApi = new CloudApi('https://avcore.io',clientToken);
     const {CloudClient,Utils}=avcoreClient;
     const {API_OPERATION}=avcore;
     const clientToken = "<YOUR-CLIENT-TOKEN>";
-    const cloudClient = new CloudClient('https://avcore.io',clientToken);
+    const cloudClient = new CloudClient('https://admin.avcore.io',clientToken);
     const stream='<stream-from-publish-example>';
     const kinds=['audio','video'] //can be also ['audio'] or ['video'] only;
     const client = await cloudClient.create(API_OPERATION.SUBSCRIBE,stream,{kinds});
