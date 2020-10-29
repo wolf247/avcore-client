@@ -265,15 +265,15 @@ console.log(`your mixer id is ${mixerId}`);
 ```
 Add audios to mixer
 ```javascript
-api.mixerAdd({mixerId,stream:'<your-first-stream-id>', origin:await cloudApi.streamOrigin(api,'<some-first-stream-id>'),kind:'audio'});
-api.mixerAdd({mixerId,stream:'<your-second-stream-id>', origin:await cloudApi.streamOrigin(api,'<some-second-stream-id>'),kind:'audio'});
+api.mixerAdd({mixerId,stream:'<your-first-stream-id>',kind:'audio'});
+api.mixerAdd({mixerId,stream:'<your-second-stream-id>',kind:'audio'});
 ```
 Add videos to mixer
 ```javascript
-api.mixerAdd({mixerId,stream:'<some-first-stream-id>', origin:await cloudApi.streamOrigin(api,'<some-first-stream-id>'),kind:'video',options:{
+api.mixerAdd({mixerId,stream:'<some-first-stream-id>',kind:'video',options:{
     x:0,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //left top quarter cropped to size
 }});
-api.mixerAdd({mixerId,stream:'<some-second-stream-id>', origin:await cloudApi.streamOrigin(api,'<some-second-stream-id>'),kind:'video',options:{
+api.mixerAdd({mixerId,stream:'<some-second-stream-id>',kind:'video',options:{
     x:640,y:0,width:640,height:360,z:0,renderType:MIXER_RENDER_TYPE.CROP //right top quarter cropped to size
 }});
 ```
