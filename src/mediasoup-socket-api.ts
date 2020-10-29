@@ -61,6 +61,7 @@ import {
 } from './client-interfaces';
 import {TransportOptions} from 'mediasoup-client/lib/Transport';
 import {IMediasoupApi, IMediasoupApiClient} from './i-mediasoup-api';
+import {CloudApi} from './cloud-api';
 export interface ApiSocket extends Omit< SocketIOClient.Socket, "on">,IMediasoupApiClient{
 }
 export class MediasoupSocketApi implements IMediasoupApi{
@@ -69,12 +70,14 @@ export class MediasoupSocketApi implements IMediasoupApi{
     private readonly url: string;
     private readonly worker: number;
     private readonly token: string;
+    private readonly cloudApi: CloudApi|undefined;
     private closed=false;
-    constructor(url:string,worker:number,token:string,log?:typeof console.log ){
+    constructor(url:string,worker:number,token:string,log?:typeof console.log, cloudApi?:CloudApi){
         this.log=log||console.log;
         this.url=url;
         this.worker=worker;
         this.token=token;
+        this.cloudApi=cloudApi;
     }
     get client():ApiSocket{
         if(!this._client){
@@ -236,6 +239,9 @@ export class MediasoupSocketApi implements IMediasoupApi{
         await this.request(ACTION.MIXER_CLOSE,json);
     }
     async mixerAdd(json:MixerAddAudioData|MixerAddVideoData):Promise<void>{
+        if(!json.origin && this.cloudApi){
+            json.origin=await this.cloudApi.streamOrigin(this,json.stream)
+        }
         await this.request(ACTION.MIXER_ADD,json);
     }
     async mixerAddFile(json:MixerAddVideoFileData|MixerAddAudioFileData):Promise<void>{
