@@ -8,6 +8,7 @@ export class CloudApi {
     private readonly log;
     constructor(url:string,token:string,log?:typeof console.log) {
         this.url=url;
+        this.token=token;
         this.log=log;
     }
     async create(operation:API_OPERATION):Promise<MediasoupSocketApi> {
