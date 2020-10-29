@@ -179,6 +179,9 @@ export class MediasoupSocketApi implements IMediasoupApi{
         await this.request(ACTION.PIPE_FROM_REMOTE_PRODUCER, json);
     }
     async startRecording(json:RecordingRequest):Promise<void>{
+        if(!json.origin && this.cloudApi){
+            json.origin=await this.cloudApi.streamOrigin(this,json.stream)
+        }
         await this.request(ACTION.START_RECORDING,json);
     }
     async stopRecording(json:RecordingData):Promise<void>{
