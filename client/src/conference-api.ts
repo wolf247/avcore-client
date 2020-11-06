@@ -78,9 +78,19 @@ export class ConferenceApi extends EventEmitter{
             if(!this.configs.kinds.includes(kind)){
                 this.configs.kinds.push(kind)
             }
+            const producer:Producer=this.connectors.get(kind) as Producer;
+            if(producer){
+                if(producer.track){
+                    this.mediaStream.removeTrack(producer.track);
+                    this.emit("removetrack",new MediaStreamTrackEvent("removetrack",{track:producer.track}));
+                }
+                await producer.replaceTrack({track})
+            }
+            else {
+                await this.publishTrack(track);
+            }
             this.mediaStream.addTrack(track);
             this.emit("addtrack",new MediaStreamTrackEvent("addtrack",{track}));
-            await this.publishTrack(track);
         }
     }
     async removeTrack(track:MediaStreamTrack):Promise<void>{
