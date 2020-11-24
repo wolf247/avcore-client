@@ -104,7 +104,7 @@ const cloudApi = new CloudApi('https://admin.avcore.io',clientToken);
             playbackVideo.srcObject=new MediaStream(mediaStream.getTracks());
             startPlaying();
         };
-        playback.on('addtrack',onStreamChange).on('removetrack',onStreamChange);
+        client.on('addtrack',onStreamChange).on('removetrack',onStreamChange);
     }
     else if(Utils.isFirefox){
         //Firefox MediaStream pauses when changed
