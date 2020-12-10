@@ -63,3 +63,14 @@ typings/
 .idea/
 .vscode/
 /data/
+src/
+client/src/
+push-script.sh
+package-lock.json
+test.ts
+tsconfig.json
+webpack.config.js
+client/package-lock.json
+**/test.ts
+client/tsconfig.json
+client/webpack.config.js
