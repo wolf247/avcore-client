@@ -297,9 +297,15 @@ export interface MixerAddFileData extends MixerPipeData,StreamData,KindsByFileIn
     loop?:boolean
     skip?:number
     removeOnExit?:boolean
+    restartTimeout?:number
 }
 export interface MixerAddVideoFileData extends MixerAddFileData,MixerOptionsData{
     kinds:undefined|['video']|['audio','video']|['video','audio']
+    label?:{
+        x:number
+        y:number
+        fontSize:number
+    }
 }
 export interface MixerAddAudioFileData extends MixerAddFileData{
     kinds:['audio']
