@@ -298,14 +298,12 @@ export interface MixerAddFileData extends MixerPipeData, StreamData, KindsByFile
     skip?: number;
     removeOnExit?: boolean;
     restartTimeout?: number;
+    filters?: {
+        [kind in MediaKind]?: string[];
+    };
 }
 export interface MixerAddVideoFileData extends MixerAddFileData, MixerOptionsData {
     kinds: undefined | ['video'] | ['audio', 'video'] | ['video', 'audio'];
-    label?: {
-        x: number;
-        y: number;
-        fontSize: number;
-    };
 }
 export interface MixerAddAudioFileData extends MixerAddFileData {
     kinds: ['audio'];
